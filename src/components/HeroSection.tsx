@@ -1,14 +1,50 @@
-import { Sprout, Leaf, Sun, ArrowDown } from "lucide-react";
+import { useState } from "react";
+import { Sprout, Leaf, Sun, ArrowDown, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import heroImage from "@/assets/hero-farm.jpg";
+
+const languages = [
+  { code: "en", label: "English" },
+  { code: "hi", label: "हिन्दी" },
+  { code: "pa", label: "ਪੰਜਾਬੀ" },
+  { code: "mr", label: "मराठी" },
+  { code: "ta", label: "தமிழ்" },
+  { code: "te", label: "తెలుగు" },
+];
 
 interface HeroSectionProps {
   onGetStarted: () => void;
 }
 
 const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
+  const [language, setLanguage] = useState("en");
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Language Selector - Top Right */}
+      <div className="absolute top-4 right-4 z-20">
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger className="w-[140px] bg-background/80 backdrop-blur-sm border-primary/20">
+            <Globe className="w-4 h-4 mr-2 text-primary" />
+            <SelectValue placeholder="Language" />
+          </SelectTrigger>
+          <SelectContent>
+            {languages.map((lang) => (
+              <SelectItem key={lang.code} value={lang.code}>
+                {lang.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
