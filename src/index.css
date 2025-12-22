@@ -43,6 +43,18 @@
     --shadow-soft: 0 4px 20px -4px hsl(150 25% 15% / 0.1);
     --shadow-glow: 0 0 40px hsl(145 45% 28% / 0.15);
 
+    /* Tech section colors */
+    --tech-dark: 220 25% 10%;
+    --tech-foreground: 0 0% 98%;
+    --tech-muted: 220 15% 55%;
+    --tech-accent: 174 70% 50%;
+    --tech-accent-light: 174 80% 60%;
+    --tech-card: 220 20% 16%;
+    --tech-card-hover: 220 20% 20%;
+    --tech-border: 220 15% 22%;
+    --shadow-tech-glow: 0 0 30px hsl(174 70% 50% / 0.4);
+    --shadow-tech-node: 0 0 10px hsl(174 70% 50% / 0.8);
+
     --sidebar-background: 45 30% 97%;
     --sidebar-foreground: 150 25% 15%;
     --sidebar-primary: 145 45% 28%;
