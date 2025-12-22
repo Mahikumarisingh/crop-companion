@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import HeroSection from "@/components/HeroSection";
 import CropForm, { FormData } from "@/components/CropForm";
 import RecommendationResults from "@/components/RecommendationResults";
+import TechnologiesSection from "@/components/TechnologiesSection";
 import { CropRecommendation } from "@/components/CropCard";
 import { generateRecommendations } from "@/lib/cropRecommendation";
 import { Sprout } from "lucide-react";
@@ -70,6 +71,9 @@ const Index = () => {
       {recommendations && (
         <RecommendationResults recommendations={recommendations} onReset={handleReset} />
       )}
+
+      {/* Technologies Section */}
+      <TechnologiesSection />
 
       {/* Footer */}
       <footer className="py-12 px-4 border-t border-border">

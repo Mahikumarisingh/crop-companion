@@ -60,6 +60,20 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        tech: {
+          dark: "hsl(var(--tech-dark))",
+          foreground: "hsl(var(--tech-foreground))",
+          muted: "hsl(var(--tech-muted))",
+          accent: "hsl(var(--tech-accent))",
+          "accent-light": "hsl(var(--tech-accent-light))",
+          card: "hsl(var(--tech-card))",
+          "card-hover": "hsl(var(--tech-card-hover))",
+          border: "hsl(var(--tech-border))",
+        },
+      },
+      boxShadow: {
+        "tech-glow": "var(--shadow-tech-glow)",
+        "tech-node": "var(--shadow-tech-node)",
       },
       borderRadius: {
         lg: "var(--radius)",
