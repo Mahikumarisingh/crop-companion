@@ -13,8 +13,8 @@ const technologies: Record<Category, Technology[]> = {
   frontend: [
     { name: "React", percentage: 95 },
     { name: "TypeScript", percentage: 90 },
-    { name: "Next.js", percentage: 85 },
     { name: "Tailwind CSS", percentage: 95 },
+    { name: "Vite", percentage: 90 },
   ],
   backend: [
     { name: "Node.js", percentage: 90 },
