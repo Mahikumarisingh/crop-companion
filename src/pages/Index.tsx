@@ -1,16 +1,36 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import HeroSection from "@/components/HeroSection";
 import CropForm, { FormData } from "@/components/CropForm";
 import RecommendationResults from "@/components/RecommendationResults";
-import TechnologiesSection from "@/components/TechnologiesSection";
 import { CropRecommendation } from "@/components/CropCard";
 import { generateRecommendations } from "@/lib/cropRecommendation";
-import { Sprout } from "lucide-react";
+import { Sprout, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { User } from "@supabase/supabase-js";
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
   const [recommendations, setRecommendations] = useState<CropRecommendation[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -18,10 +38,7 @@ const Index = () => {
 
   const handleFormSubmit = async (formData: FormData) => {
     setIsLoading(true);
-    
-    // Simulate AI processing time
     await new Promise((resolve) => setTimeout(resolve, 1500));
-    
     const results = generateRecommendations(formData);
     setRecommendations(results);
     setIsLoading(false);
@@ -30,6 +47,11 @@ const Index = () => {
   const handleReset = () => {
     setRecommendations(null);
     scrollToForm();
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Logged out successfully");
   };
 
   return (
@@ -43,16 +65,24 @@ const Index = () => {
             </div>
             <span className="text-xl font-bold">CropWise AI</span>
           </div>
-          <nav className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </a>
-            <a href="#about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              About
-            </a>
-            <a href="#contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Contact
-            </a>
+          <nav className="flex items-center gap-4">
+            {user ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            ) : (
+              <Link to="/auth">
+                <Button variant="default" size="sm">
+                  Login
+                </Button>
+              </Link>
+            )}
           </nav>
         </div>
       </header>
@@ -71,9 +101,6 @@ const Index = () => {
       {recommendations && (
         <RecommendationResults recommendations={recommendations} onReset={handleReset} />
       )}
-
-      {/* Technologies Section */}
-      <TechnologiesSection />
 
       {/* Footer */}
       <footer className="py-12 px-4 border-t border-border">
