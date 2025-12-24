@@ -10,9 +10,12 @@ import { Sprout, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
   const [recommendations, setRecommendations] = useState<CropRecommendation[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,7 +68,8 @@ const Index = () => {
             </div>
             <span className="text-xl font-bold">CropWise AI</span>
           </div>
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-2">
+            <LanguageSwitcher />
             {user ? (
               <Button
                 variant="ghost"
@@ -74,12 +78,12 @@ const Index = () => {
                 className="text-muted-foreground hover:text-foreground"
               >
                 <LogOut className="w-4 h-4 mr-2" />
-                Logout
+                {t('logout')}
               </Button>
             ) : (
               <Link to="/auth">
                 <Button variant="default" size="sm">
-                  Login
+                  {t('login')}
                 </Button>
               </Link>
             )}
@@ -112,10 +116,10 @@ const Index = () => {
             <span className="text-lg font-bold">CropWise AI</span>
           </div>
           <p className="text-muted-foreground text-sm">
-            Empowering farmers with AI-driven insights for sustainable agriculture.
+            {t('footerText')}
           </p>
           <p className="text-muted-foreground text-xs mt-4">
-            © {new Date().getFullYear()} CropWise AI. All rights reserved.
+            © {new Date().getFullYear()} CropWise AI. {t('allRights')}
           </p>
         </div>
       </footer>

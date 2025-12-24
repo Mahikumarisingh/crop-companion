@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Loader2, Sparkles } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CropFormProps {
   onSubmit: (data: FormData) => void;
@@ -18,6 +19,7 @@ export interface FormData {
 }
 
 const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState<FormData>({
     soilType: "",
     climate: "",
@@ -37,9 +39,9 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
   return (
     <Card variant="elevated" className="max-w-2xl mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl md:text-3xl">Tell Us About Your Farm</CardTitle>
+        <CardTitle className="text-2xl md:text-3xl">{t('formTitle')}</CardTitle>
         <CardDescription className="text-base">
-          Enter your farm conditions to get personalized AI crop recommendations
+          {t('formSubtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -48,22 +50,22 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
             {/* Soil Type */}
             <div className="space-y-2">
               <Label htmlFor="soilType" className="text-base font-medium">
-                Soil Type
+                {t('soilType')}
               </Label>
               <Select
                 value={formData.soilType}
                 onValueChange={(value) => setFormData({ ...formData, soilType: value })}
               >
                 <SelectTrigger id="soilType" className="h-12">
-                  <SelectValue placeholder="Select soil type" />
+                  <SelectValue placeholder={t('selectSoilType')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="clay">Clay</SelectItem>
-                  <SelectItem value="sandy">Sandy</SelectItem>
-                  <SelectItem value="loamy">Loamy</SelectItem>
-                  <SelectItem value="silt">Silt</SelectItem>
-                  <SelectItem value="peaty">Peaty</SelectItem>
-                  <SelectItem value="chalky">Chalky</SelectItem>
+                  <SelectItem value="clay">{t('clay')}</SelectItem>
+                  <SelectItem value="sandy">{t('sandy')}</SelectItem>
+                  <SelectItem value="loamy">{t('loamy')}</SelectItem>
+                  <SelectItem value="silt">{t('silt')}</SelectItem>
+                  <SelectItem value="peaty">{t('peat')}</SelectItem>
+                  <SelectItem value="chalky">{t('chalky')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -71,22 +73,21 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
             {/* Climate */}
             <div className="space-y-2">
               <Label htmlFor="climate" className="text-base font-medium">
-                Climate Zone
+                {t('climate')}
               </Label>
               <Select
                 value={formData.climate}
                 onValueChange={(value) => setFormData({ ...formData, climate: value })}
               >
                 <SelectTrigger id="climate" className="h-12">
-                  <SelectValue placeholder="Select climate" />
+                  <SelectValue placeholder={t('selectClimate')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="tropical">Tropical</SelectItem>
-                  <SelectItem value="subtropical">Subtropical</SelectItem>
-                  <SelectItem value="temperate">Temperate</SelectItem>
-                  <SelectItem value="arid">Arid / Desert</SelectItem>
-                  <SelectItem value="mediterranean">Mediterranean</SelectItem>
-                  <SelectItem value="continental">Continental</SelectItem>
+                  <SelectItem value="tropical">{t('tropical')}</SelectItem>
+                  <SelectItem value="subtropical">{t('subtropical')}</SelectItem>
+                  <SelectItem value="temperate">{t('temperate')}</SelectItem>
+                  <SelectItem value="arid">{t('arid')}</SelectItem>
+                  <SelectItem value="semiarid">{t('semiarid')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -94,20 +95,20 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
             {/* Water Availability */}
             <div className="space-y-2">
               <Label htmlFor="water" className="text-base font-medium">
-                Water Availability
+                {t('waterAvailability')}
               </Label>
               <Select
                 value={formData.waterAvailability}
                 onValueChange={(value) => setFormData({ ...formData, waterAvailability: value })}
               >
                 <SelectTrigger id="water" className="h-12">
-                  <SelectValue placeholder="Select water access" />
+                  <SelectValue placeholder={t('selectWaterAvailability')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="abundant">Abundant (Irrigation)</SelectItem>
-                  <SelectItem value="moderate">Moderate (Seasonal Rain)</SelectItem>
-                  <SelectItem value="limited">Limited (Dry Region)</SelectItem>
-                  <SelectItem value="rainfed">Rain-fed Only</SelectItem>
+                  <SelectItem value="abundant">{t('abundant')}</SelectItem>
+                  <SelectItem value="moderate">{t('moderate')}</SelectItem>
+                  <SelectItem value="limited">{t('limited')}</SelectItem>
+                  <SelectItem value="rainfed">{t('rainfed')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -115,21 +116,20 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
             {/* Season */}
             <div className="space-y-2">
               <Label htmlFor="season" className="text-base font-medium">
-                Planting Season
+                {t('season')}
               </Label>
               <Select
                 value={formData.season}
                 onValueChange={(value) => setFormData({ ...formData, season: value })}
               >
                 <SelectTrigger id="season" className="h-12">
-                  <SelectValue placeholder="Select season" />
+                  <SelectValue placeholder={t('selectSeason')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="spring">Spring</SelectItem>
-                  <SelectItem value="summer">Summer</SelectItem>
-                  <SelectItem value="autumn">Autumn / Fall</SelectItem>
-                  <SelectItem value="winter">Winter</SelectItem>
-                  <SelectItem value="monsoon">Monsoon</SelectItem>
+                  <SelectItem value="kharif">{t('kharif')}</SelectItem>
+                  <SelectItem value="rabi">{t('rabi')}</SelectItem>
+                  <SelectItem value="zaid">{t('zaid')}</SelectItem>
+                  <SelectItem value="yearround">{t('yearround')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -145,12 +145,12 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
             {isLoading ? (
               <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Analyzing Your Farm...
+                {t('analyzing')}
               </>
             ) : (
               <>
                 <Sparkles className="w-5 h-5 mr-2" />
-                Get AI Recommendations
+                {t('getRecommendations')}
               </>
             )}
           </Button>
