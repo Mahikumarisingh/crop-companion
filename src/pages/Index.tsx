@@ -66,7 +66,7 @@ const Index = () => {
             <div className="w-10 h-10 rounded-xl bg-gradient-hero flex items-center justify-center">
               <Sprout className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold">CropWise AI</span>
+            <span className="text-xl font-bold">{t('appName')}</span>
           </div>
           <nav className="flex items-center gap-2">
             <LanguageSwitcher />
@@ -113,7 +113,7 @@ const Index = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-hero flex items-center justify-center">
               <Sprout className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="text-lg font-bold">CropWise AI</span>
+            <span className="text-lg font-bold">{t('appName')}</span>
           </div>
           <p className="text-muted-foreground text-sm">
             {t('footerText')}
