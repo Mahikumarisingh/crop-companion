@@ -90,6 +90,21 @@ const translations: Record<Language, Record<string, string>> = {
     growingTips: "Growing Tips",
     match: "Match",
     
+    // Water levels
+    waterLow: "Low",
+    waterMedium: "Medium",
+    waterHigh: "High",
+    
+    // Sunlight levels
+    fullSun: "Full Sun",
+    partialShade: "Partial Shade",
+    shadeTolerant: "Shade Tolerant",
+    
+    // Yield levels
+    yieldLow: "Low",
+    yieldMedium: "Medium",
+    yieldHigh: "High",
+    
     // Crop names
     rice: "Rice",
     wheat: "Wheat",
@@ -101,6 +116,50 @@ const translations: Record<Language, Record<string, string>> = {
     tomatoes: "Tomatoes",
     sorghum: "Sorghum",
     sugarcane: "Sugarcane",
+    
+    // Crop descriptions
+    riceDesc: "A staple grain crop that thrives in waterlogged conditions. Ideal for tropical and subtropical climates with abundant water.",
+    wheatDesc: "A cool-season cereal grain that performs well in temperate climates with moderate water availability.",
+    cornDesc: "A versatile crop suited for warm climates with moderate to good water supply. Excellent for various soil types.",
+    soybeanDesc: "A nitrogen-fixing legume that enriches soil. Thrives in warm conditions with well-drained loamy soil.",
+    cottonDesc: "A fiber crop that thrives in warm, semi-arid conditions. Tolerates various soil types but prefers deep, well-drained soil.",
+    milletDesc: "A drought-tolerant grain ideal for arid regions with limited water. Grows well in sandy and poor soils.",
+    potatoesDesc: "A tuber crop that excels in cool temperate climates with loose, well-drained loamy soil.",
+    tomatoesDesc: "A warm-season vegetable requiring consistent water and nutrients. Best in loamy, well-drained soil.",
+    sorghumDesc: "A drought-resistant cereal perfect for hot, dry climates. Versatile crop for grain, fodder, and biofuel.",
+    sugarcaneDesc: "A tropical grass crop requiring abundant water and sunshine. Thrives in deep, fertile soil with good drainage.",
+    
+    // Crop tips
+    riceTip1: "Maintain standing water of 2-5 cm during vegetative growth",
+    riceTip2: "Apply nitrogen fertilizer in split doses",
+    riceTip3: "Monitor for blast disease during humid conditions",
+    wheatTip1: "Plant when soil temperature is between 10-15°C",
+    wheatTip2: "Ensure good drainage to prevent root rot",
+    wheatTip3: "Apply phosphorus at sowing for strong root development",
+    cornTip1: "Plant when soil temperature reaches 16°C",
+    cornTip2: "Space plants 20-30 cm apart in rows",
+    cornTip3: "Critical irrigation during tasseling and silking stages",
+    soybeanTip1: "Inoculate seeds with rhizobium for nitrogen fixation",
+    soybeanTip2: "Avoid waterlogging during flowering",
+    soybeanTip3: "Rotate with cereals for best soil health",
+    cottonTip1: "Requires frost-free growing period of 180+ days",
+    cottonTip2: "Monitor for bollworm and whitefly",
+    cottonTip3: "Apply potassium for fiber quality improvement",
+    milletTip1: "Highly drought tolerant once established",
+    milletTip2: "Minimal fertilizer requirements",
+    milletTip3: "Can serve as emergency fodder crop",
+    potatoesTip1: "Hill soil around plants as they grow",
+    potatoesTip2: "Keep tubers covered to prevent greening",
+    potatoesTip3: "Rotate to prevent soil-borne diseases",
+    tomatoesTip1: "Stake or cage plants for better air circulation",
+    tomatoesTip2: "Mulch to maintain soil moisture",
+    tomatoesTip3: "Prune suckers for larger fruits",
+    sorghumTip1: "Deep root system enables drought survival",
+    sorghumTip2: "Can ratoon for second harvest",
+    sorghumTip3: "Control bird damage near maturity",
+    sugarcaneTip1: "Requires 150-200 cm annual rainfall or irrigation",
+    sugarcaneTip2: "Harvest when sugar content peaks",
+    sugarcaneTip3: "Ratoon crops reduce planting costs",
     
     // Footer
     footerText: "Empowering farmers with AI-driven insights",
@@ -187,6 +246,21 @@ const translations: Record<Language, Record<string, string>> = {
     growingTips: "उगाने के सुझाव",
     match: "मिलान",
     
+    // Water levels
+    waterLow: "कम",
+    waterMedium: "मध्यम",
+    waterHigh: "अधिक",
+    
+    // Sunlight levels
+    fullSun: "पूर्ण धूप",
+    partialShade: "आंशिक छाया",
+    shadeTolerant: "छाया सहनशील",
+    
+    // Yield levels
+    yieldLow: "कम",
+    yieldMedium: "मध्यम",
+    yieldHigh: "अधिक",
+    
     // Crop names
     rice: "चावल",
     wheat: "गेहूं",
@@ -198,6 +272,50 @@ const translations: Record<Language, Record<string, string>> = {
     tomatoes: "टमाटर",
     sorghum: "ज्वार",
     sugarcane: "गन्ना",
+    
+    // Crop descriptions
+    riceDesc: "एक मुख्य अनाज की फसल जो जलभराव वाली स्थितियों में पनपती है। प्रचुर पानी के साथ उष्णकटिबंधीय और उपोष्णकटिबंधीय जलवायु के लिए आदर्श।",
+    wheatDesc: "एक ठंडी मौसम की अनाज फसल जो समशीतोष्ण जलवायु में मध्यम पानी की उपलब्धता के साथ अच्छा प्रदर्शन करती है।",
+    cornDesc: "मध्यम से अच्छी पानी की आपूर्ति के साथ गर्म जलवायु के लिए उपयुक्त एक बहुमुखी फसल। विभिन्न मिट्टी प्रकारों के लिए उत्कृष्ट।",
+    soybeanDesc: "एक नाइट्रोजन-फिक्सिंग फलीदार फसल जो मिट्टी को समृद्ध करती है। अच्छी जल निकासी वाली दोमट मिट्टी में गर्म परिस्थितियों में पनपती है।",
+    cottonDesc: "एक रेशा फसल जो गर्म, अर्ध-शुष्क परिस्थितियों में पनपती है। विभिन्न मिट्टी प्रकारों को सहन करती है लेकिन गहरी, अच्छी जल निकासी वाली मिट्टी पसंद करती है।",
+    milletDesc: "सीमित पानी वाले शुष्क क्षेत्रों के लिए एक सूखा-सहिष्णु अनाज। रेतीली और खराब मिट्टी में अच्छी तरह उगता है।",
+    potatoesDesc: "एक कंद फसल जो ढीली, अच्छी जल निकासी वाली दोमट मिट्टी के साथ ठंडी समशीतोष्ण जलवायु में उत्कृष्ट प्रदर्शन करती है।",
+    tomatoesDesc: "एक गर्म मौसम की सब्जी जिसे लगातार पानी और पोषक तत्वों की आवश्यकता होती है। दोमट, अच्छी जल निकासी वाली मिट्टी में सर्वोत्तम।",
+    sorghumDesc: "गर्म, शुष्क जलवायु के लिए एक सूखा-प्रतिरोधी अनाज। अनाज, चारे और जैव ईंधन के लिए बहुमुखी फसल।",
+    sugarcaneDesc: "एक उष्णकटिबंधीय घास फसल जिसे प्रचुर पानी और धूप की आवश्यकता होती है। अच्छी जल निकासी के साथ गहरी, उपजाऊ मिट्टी में पनपती है।",
+    
+    // Crop tips
+    riceTip1: "वनस्पति विकास के दौरान 2-5 सेमी खड़ा पानी बनाए रखें",
+    riceTip2: "नाइट्रोजन उर्वरक को विभाजित खुराक में लगाएं",
+    riceTip3: "आर्द्र परिस्थितियों में ब्लास्ट रोग की निगरानी करें",
+    wheatTip1: "मिट्टी का तापमान 10-15°C के बीच होने पर बुवाई करें",
+    wheatTip2: "जड़ सड़न रोकने के लिए अच्छी जल निकासी सुनिश्चित करें",
+    wheatTip3: "मजबूत जड़ विकास के लिए बुवाई के समय फास्फोरस लगाएं",
+    cornTip1: "मिट्टी का तापमान 16°C तक पहुंचने पर बुवाई करें",
+    cornTip2: "पौधों को पंक्तियों में 20-30 सेमी की दूरी पर लगाएं",
+    cornTip3: "झंडा और रेशम अवस्था में सिंचाई महत्वपूर्ण है",
+    soybeanTip1: "नाइट्रोजन स्थिरीकरण के लिए बीजों को राइज़ोबियम से उपचारित करें",
+    soybeanTip2: "फूल आने के दौरान जलभराव से बचें",
+    soybeanTip3: "मिट्टी के स्वास्थ्य के लिए अनाज के साथ फसल चक्र अपनाएं",
+    cottonTip1: "180+ दिनों की पाला-मुक्त उगाने की अवधि आवश्यक है",
+    cottonTip2: "बॉलवर्म और सफेद मक्खी की निगरानी करें",
+    cottonTip3: "रेशे की गुणवत्ता सुधार के लिए पोटाशियम लगाएं",
+    milletTip1: "स्थापित होने के बाद अत्यधिक सूखा सहनशील",
+    milletTip2: "न्यूनतम उर्वरक आवश्यकता",
+    milletTip3: "आपातकालीन चारा फसल के रूप में काम कर सकता है",
+    potatoesTip1: "पौधों के बढ़ने पर मिट्टी चढ़ाएं",
+    potatoesTip2: "हरा होने से रोकने के लिए कंदों को ढका रखें",
+    potatoesTip3: "मिट्टी जनित रोगों को रोकने के लिए फसल चक्र अपनाएं",
+    tomatoesTip1: "बेहतर वायु संचार के लिए पौधों को सहारा दें",
+    tomatoesTip2: "मिट्टी की नमी बनाए रखने के लिए मल्च करें",
+    tomatoesTip3: "बड़े फलों के लिए सकर्स को छांटें",
+    sorghumTip1: "गहरी जड़ प्रणाली सूखे में जीवित रहने में सक्षम बनाती है",
+    sorghumTip2: "दूसरी फसल के लिए रेटून कर सकते हैं",
+    sorghumTip3: "परिपक्वता के समय पक्षी क्षति नियंत्रित करें",
+    sugarcaneTip1: "150-200 सेमी वार्षिक वर्षा या सिंचाई आवश्यक",
+    sugarcaneTip2: "चीनी सामग्री अधिकतम होने पर कटाई करें",
+    sugarcaneTip3: "रेटून फसलें रोपण लागत कम करती हैं",
     
     // Footer
     footerText: "AI-संचालित अंतर्दृष्टि के साथ किसानों को सशक्त बनाना",
