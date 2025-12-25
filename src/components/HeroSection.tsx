@@ -10,6 +10,13 @@ interface HeroSectionProps {
 const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
   const { t } = useLanguage();
   
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById('about-section');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -39,16 +46,16 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-up">
             <Sprout className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">AI-Powered Agriculture</span>
+            <span className="text-sm font-medium text-primary">{t('aiBadge')}</span>
           </div>
 
-          {/* Main Heading */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-up">
+          {/* Main Heading - Fixed line height for Hindi */}
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-up leading-tight">
             {t('heroTitle')}
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up-delayed">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up-delayed leading-relaxed">
             {t('heroSubtitle')}
           </p>
 
@@ -58,7 +65,7 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
               {t('getStarted')}
               <Sprout className="w-5 h-5 ml-2" />
             </Button>
-            <Button variant="outline" size="xl">
+            <Button variant="outline" size="xl" onClick={scrollToAbout}>
               {t('learnMore')}
             </Button>
           </div>
@@ -67,15 +74,15 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           <div className="grid grid-cols-3 gap-8 mt-16 max-w-xl mx-auto animate-fade-up-delayed">
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary">50+</div>
-              <div className="text-sm text-muted-foreground">{t('cropTypes') || 'Crop Types'}</div>
+              <div className="text-sm text-muted-foreground">{t('cropTypes')}</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary">95%</div>
-              <div className="text-sm text-muted-foreground">{t('accuracy') || 'Accuracy'}</div>
+              <div className="text-sm text-muted-foreground">{t('accuracy')}</div>
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary">10K+</div>
-              <div className="text-sm text-muted-foreground">{t('farmers') || 'Farmers'}</div>
+              <div className="text-sm text-muted-foreground">{t('farmers')}</div>
             </div>
           </div>
         </div>
@@ -85,6 +92,9 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
           <ArrowDown className="w-6 h-6 text-muted-foreground" />
         </div>
       </div>
+
+      {/* About Section */}
+      <div id="about-section" className="absolute bottom-0 left-0 right-0 -mb-96" />
     </section>
   );
 };
