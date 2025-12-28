@@ -30,13 +30,13 @@ const HeroSection = ({ onGetStarted }: HeroSectionProps) => {
       </div>
 
       {/* Floating decorative elements */}
-      <div className="absolute top-20 left-10 animate-float opacity-60">
+      <div className="absolute top-20 left-10 animate-float opacity-60 hidden md:block">
         <Leaf className="w-12 h-12 text-primary" />
       </div>
-      <div className="absolute top-40 right-20 animate-float-delayed opacity-50">
+      <div className="absolute top-40 right-20 animate-float-delayed opacity-50 hidden md:block">
         <Sprout className="w-10 h-10 text-primary" />
       </div>
-      <div className="absolute bottom-40 left-1/4 animate-float opacity-40">
+      <div className="absolute bottom-40 left-1/4 animate-float opacity-40 hidden md:block">
         <Sun className="w-8 h-8 text-accent" />
       </div>
 
