@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import HeroSection from "@/components/HeroSection";
 import CropForm, { FormData } from "@/components/CropForm";
 import RecommendationResults from "@/components/RecommendationResults";
+import ImageUpload from "@/components/ImageUpload";
 import { CropRecommendation } from "@/components/CropCard";
 import { generateRecommendations } from "@/lib/cropRecommendation";
 import { Sprout, LogOut } from "lucide-react";
@@ -96,8 +97,11 @@ const Index = () => {
 
       {/* Form Section */}
       <section ref={formRef} className="py-20 px-4 bg-muted/30" id="form">
-        <div className="container mx-auto">
-          <CropForm onSubmit={handleFormSubmit} isLoading={isLoading} />
+        <div className="container mx-auto max-w-4xl">
+          <div className="grid md:grid-cols-2 gap-6">
+            <CropForm onSubmit={handleFormSubmit} isLoading={isLoading} />
+            <ImageUpload />
+          </div>
         </div>
       </section>
 
