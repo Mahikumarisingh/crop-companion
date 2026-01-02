@@ -46,6 +46,7 @@ const translations: Record<Language, Record<string, string>> = {
     orUploadImage: "Or Upload Photo",
     uploadImageDesc: "Upload photos of your soil, weather conditions, or crop to get AI recommendations",
     uploadPhoto: "Upload Photo",
+    dropHere: "Drop image here",
     analyzeImage: "Analyze Image",
     analyzingImage: "Analyzing...",
     
@@ -208,6 +209,7 @@ const translations: Record<Language, Record<string, string>> = {
     orUploadImage: "या फोटो अपलोड करें",
     uploadImageDesc: "AI सिफारिशें पाने के लिए अपनी मिट्टी, मौसम की स्थिति या फसल की फोटो अपलोड करें",
     uploadPhoto: "फोटो अपलोड करें",
+    dropHere: "यहाँ छवि छोड़ें",
     analyzeImage: "चित्र विश्लेषण करें",
     analyzingImage: "विश्लेषण हो रहा है...",
     
