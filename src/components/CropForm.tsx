@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Sparkles, MapPin } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { indiaLocationData, getClimateForDistrict } from "@/data/indiaLocations";
 
 interface CropFormProps {
   onSubmit: (data: FormData) => void;
@@ -16,16 +17,45 @@ export interface FormData {
   climate: string;
   waterAvailability: string;
   season: string;
+  state?: string;
+  district?: string;
 }
 
 const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
   const { t } = useLanguage();
+  const [selectedState, setSelectedState] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [formData, setFormData] = useState<FormData>({
     soilType: "",
     climate: "",
     waterAvailability: "",
     season: "",
   });
+
+  // Get districts for selected state
+  const districts = selectedState
+    ? indiaLocationData.states.find(s => s.name === selectedState)?.districts || []
+    : [];
+
+  // Auto-set climate when district is selected
+  useEffect(() => {
+    if (selectedState && selectedDistrict) {
+      const climate = getClimateForDistrict(selectedState, selectedDistrict);
+      if (climate) {
+        setFormData(prev => ({ ...prev, climate, state: selectedState, district: selectedDistrict }));
+      }
+    }
+  }, [selectedState, selectedDistrict]);
+
+  const handleStateChange = (state: string) => {
+    setSelectedState(state);
+    setSelectedDistrict("");
+    setFormData(prev => ({ ...prev, climate: "", state, district: "" }));
+  };
+
+  const handleDistrictChange = (district: string) => {
+    setSelectedDistrict(district);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +76,65 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Location Section */}
+          <div className="space-y-4 p-4 bg-muted/50 rounded-lg border border-border/50">
+            <div className="flex items-center gap-2 text-primary">
+              <MapPin className="w-5 h-5" />
+              <span className="font-medium">{t('selectLocation')}</span>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* State */}
+              <div className="space-y-2">
+                <Label htmlFor="state" className="text-sm font-medium">
+                  {t('state')}
+                </Label>
+                <Select
+                  value={selectedState}
+                  onValueChange={handleStateChange}
+                >
+                  <SelectTrigger id="state" className="h-11">
+                    <SelectValue placeholder={t('selectState')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {indiaLocationData.states.map((state) => (
+                      <SelectItem key={state.name} value={state.name}>
+                        {state.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* District */}
+              <div className="space-y-2">
+                <Label htmlFor="district" className="text-sm font-medium">
+                  {t('district')}
+                </Label>
+                <Select
+                  value={selectedDistrict}
+                  onValueChange={handleDistrictChange}
+                  disabled={!selectedState}
+                >
+                  <SelectTrigger id="district" className="h-11">
+                    <SelectValue placeholder={t('selectDistrict')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {districts.map((district) => (
+                      <SelectItem key={district.name} value={district.name}>
+                        {district.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            {selectedDistrict && formData.climate && (
+              <p className="text-sm text-muted-foreground">
+                ✓ {t('climateDetected')}: <span className="text-primary font-medium">{t(formData.climate)}</span>
+              </p>
+            )}
+          </div>
+
           <div className="grid md:grid-cols-2 gap-6">
             {/* Soil Type */}
             <div className="space-y-2">
