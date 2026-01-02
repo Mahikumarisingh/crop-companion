@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Loader2, Sparkles, MapPin } from "lucide-react";
+import { Loader2, Sparkles, MapPin, Navigation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { indiaLocationData, getClimateForDistrict } from "@/data/indiaLocations";
+import { toast } from "sonner";
 
 interface CropFormProps {
   onSubmit: (data: FormData) => void;
@@ -25,12 +26,95 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
   const { t } = useLanguage();
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [isLocating, setIsLocating] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     soilType: "",
     climate: "",
     waterAvailability: "",
     season: "",
   });
+
+  // Find closest matching location from our data based on reverse geocoded result
+  const findMatchingLocation = (state: string, district: string) => {
+    // Try to find exact state match
+    const stateData = indiaLocationData.states.find(
+      s => s.name.toLowerCase() === state.toLowerCase() ||
+           s.name.toLowerCase().includes(state.toLowerCase()) ||
+           state.toLowerCase().includes(s.name.toLowerCase())
+    );
+    
+    if (stateData) {
+      // Try to find district match
+      const districtData = stateData.districts.find(
+        d => d.name.toLowerCase() === district.toLowerCase() ||
+             d.name.toLowerCase().includes(district.toLowerCase()) ||
+             district.toLowerCase().includes(d.name.toLowerCase())
+      );
+      
+      return {
+        state: stateData.name,
+        district: districtData?.name || stateData.districts[0]?.name || ""
+      };
+    }
+    
+    return null;
+  };
+
+  const handleUseMyLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error(t('locationNotSupported'));
+      return;
+    }
+
+    setIsLocating(true);
+    
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        
+        try {
+          // Use reverse geocoding API
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`
+          );
+          const data = await response.json();
+          
+          if (data.address) {
+            const state = data.address.state || "";
+            const district = data.address.state_district || data.address.county || data.address.city || "";
+            
+            const match = findMatchingLocation(state, district);
+            
+            if (match) {
+              setSelectedState(match.state);
+              setSelectedDistrict(match.district);
+              toast.success(t('locationDetected'));
+            } else {
+              toast.error(t('locationNotInList'));
+            }
+          }
+        } catch (error) {
+          toast.error(t('locationError'));
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (error) => {
+        setIsLocating(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            toast.error(t('locationPermissionDenied'));
+            break;
+          case error.POSITION_UNAVAILABLE:
+            toast.error(t('locationUnavailable'));
+            break;
+          default:
+            toast.error(t('locationError'));
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
 
   // Get districts for selected state
   const districts = selectedState
@@ -78,9 +162,26 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Location Section */}
           <div className="space-y-4 p-4 bg-muted/50 rounded-lg border border-border/50">
-            <div className="flex items-center gap-2 text-primary">
-              <MapPin className="w-5 h-5" />
-              <span className="font-medium">{t('selectLocation')}</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-primary">
+                <MapPin className="w-5 h-5" />
+                <span className="font-medium">{t('selectLocation')}</span>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleUseMyLocation}
+                disabled={isLocating}
+                className="gap-2"
+              >
+                {isLocating ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Navigation className="w-4 h-4" />
+                )}
+                {t('useMyLocation')}
+              </Button>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {/* State */}
