@@ -7,6 +7,7 @@ import { Loader2, Sparkles, MapPin, Navigation } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { indiaLocationData, getClimateForDistrict } from "@/data/indiaLocations";
 import { toast } from "sonner";
+import SoilTypeHelper from "./SoilTypeHelper";
 
 interface CropFormProps {
   onSubmit: (data: FormData) => void;
@@ -260,9 +261,14 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Soil Type */}
             <div className="space-y-2">
-              <Label htmlFor="soilType" className="text-base font-medium">
-                {t('soilType')}
-              </Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="soilType" className="text-base font-medium">
+                  {t('soilType')}
+                </Label>
+                <SoilTypeHelper 
+                  onSoilTypeDetected={(type) => setFormData({ ...formData, soilType: type })} 
+                />
+              </div>
               <Select
                 value={formData.soilType}
                 onValueChange={(value) => setFormData({ ...formData, soilType: value })}
