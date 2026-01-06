@@ -34,23 +34,37 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
     season: "",
   });
 
+  // Normalize string for better matching
+  const normalizeString = (str: string) => {
+    return str.toLowerCase().trim().replace(/\s+/g, ' ');
+  };
+
   // Find closest matching location from our data based on reverse geocoded result
-  const findMatchingLocation = (state: string, district: string) => {
-    // Try to find exact state match
-    const stateData = indiaLocationData.states.find(
-      s => s.name.toLowerCase() === state.toLowerCase() ||
-           s.name.toLowerCase().includes(state.toLowerCase()) ||
-           state.toLowerCase().includes(s.name.toLowerCase())
-    );
+  const findMatchingLocation = (state: string, district: string, city?: string) => {
+    const normalizedState = normalizeString(state);
+    
+    // Try to find state match
+    const stateData = indiaLocationData.states.find(s => {
+      const stateName = normalizeString(s.name);
+      return stateName === normalizedState ||
+             stateName.includes(normalizedState) ||
+             normalizedState.includes(stateName);
+    });
     
     if (stateData) {
-      // Try to find district match
-      const districtData = stateData.districts.find(
-        d => d.name.toLowerCase() === district.toLowerCase() ||
-             d.name.toLowerCase().includes(district.toLowerCase()) ||
-             district.toLowerCase().includes(d.name.toLowerCase())
-      );
+      // Try to find district match - check both district and city names from API
+      const searchTerms = [district, city].filter(Boolean).map(t => normalizeString(t!));
       
+      const districtData = stateData.districts.find(d => {
+        const districtName = normalizeString(d.name);
+        return searchTerms.some(term => 
+          districtName === term ||
+          districtName.includes(term) ||
+          term.includes(districtName)
+        );
+      });
+      
+      // If district found, return it; otherwise return first district of state
       return {
         state: stateData.name,
         district: districtData?.name || stateData.districts[0]?.name || ""
@@ -81,19 +95,26 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
           
           if (data.address) {
             const state = data.address.state || "";
-            const district = data.address.state_district || data.address.county || data.address.city || "";
+            const district = data.address.state_district || data.address.county || "";
+            const city = data.address.city || data.address.town || data.address.village || "";
             
-            const match = findMatchingLocation(state, district);
+            console.log("Location API response:", { state, district, city });
+            
+            const match = findMatchingLocation(state, district, city);
             
             if (match) {
               setSelectedState(match.state);
-              setSelectedDistrict(match.district);
-              toast.success(t('locationDetected'));
+              // Use setTimeout to ensure state update completes before district
+              setTimeout(() => {
+                setSelectedDistrict(match.district);
+              }, 100);
+              toast.success(`${t('locationDetected')}: ${match.district}, ${match.state}`);
             } else {
               toast.error(t('locationNotInList'));
             }
           }
         } catch (error) {
+          console.error("Location error:", error);
           toast.error(t('locationError'));
         } finally {
           setIsLocating(false);
