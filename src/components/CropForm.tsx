@@ -82,16 +82,33 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
     }
 
     setIsLocating(true);
+    toast.info("Getting your location...");
     
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         
         try {
-          // Use reverse geocoding API
+          // Use reverse geocoding API with timeout
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
+          
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`,
+            { 
+              signal: controller.signal,
+              headers: {
+                'Accept': 'application/json',
+                'User-Agent': 'CropWise AI App'
+              }
+            }
           );
+          clearTimeout(timeoutId);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+          }
+          
           const data = await response.json();
           
           if (data.address) {
@@ -99,30 +116,36 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
             const district = data.address.state_district || data.address.county || "";
             const city = data.address.city || data.address.town || data.address.village || "";
             
-            console.log("Location API response:", { state, district, city });
+            console.log("Location API response:", { state, district, city, full: data.address });
             
             const match = findMatchingLocation(state, district, city);
             
             if (match) {
               setSelectedState(match.state);
-              // Use setTimeout to ensure state update completes before district
               setTimeout(() => {
                 setSelectedDistrict(match.district);
               }, 100);
               toast.success(`${t('locationDetected')}: ${match.district}, ${match.state}`);
             } else {
-              toast.error(t('locationNotInList'));
+              toast.error(`${t('locationNotInList')}: ${state}`);
             }
+          } else {
+            toast.error(t('locationError'));
           }
-        } catch (error) {
-          console.error("Location error:", error);
-          toast.error(t('locationError'));
+        } catch (error: any) {
+          console.error("Location fetch error:", error);
+          if (error.name === 'AbortError') {
+            toast.error("Location fetch timed out. Please try again.");
+          } else {
+            toast.error(`${t('locationError')}: ${error.message}`);
+          }
         } finally {
           setIsLocating(false);
         }
       },
       (error) => {
         setIsLocating(false);
+        console.error("Geolocation error:", error);
         switch (error.code) {
           case error.PERMISSION_DENIED:
             toast.error(t('locationPermissionDenied'));
@@ -130,11 +153,14 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
           case error.POSITION_UNAVAILABLE:
             toast.error(t('locationUnavailable'));
             break;
+          case error.TIMEOUT:
+            toast.error("Location request timed out. Please try again.");
+            break;
           default:
             toast.error(t('locationError'));
         }
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 }
     );
   };
 
