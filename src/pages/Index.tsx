@@ -5,6 +5,7 @@ import HeroSection from "@/components/HeroSection";
 import CropForm, { FormData } from "@/components/CropForm";
 import RecommendationResults from "@/components/RecommendationResults";
 import ImageUpload from "@/components/ImageUpload";
+import FarmingTools from "@/components/FarmingTools";
 import { CropRecommendation } from "@/components/CropCard";
 import { generateRecommendations } from "@/lib/cropRecommendation";
 import { Sprout, LogOut } from "lucide-react";
@@ -109,6 +110,9 @@ const Index = () => {
       {recommendations && (
         <RecommendationResults recommendations={recommendations} onReset={handleReset} />
       )}
+
+      {/* Farming Tools Section */}
+      <FarmingTools />
 
       {/* Footer */}
       <footer className="py-12 px-4 border-t border-border">
