@@ -3,8 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Bug, Leaf, Thermometer, CloudSun, AlertTriangle, CheckCircle, Info } from "lucide-react";
+import { Bug, Leaf, Thermometer, CloudSun, AlertTriangle, CheckCircle, Info, Search } from "lucide-react";
 
 interface PesticideInfo {
   name: string;
@@ -37,6 +38,8 @@ interface WeatherAlert {
 const FarmingTools = () => {
   const { t, language } = useLanguage();
   const [selectedCrop, setSelectedCrop] = useState("rice");
+  const [customCrop, setCustomCrop] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
   const crops = [
     { id: "rice", name: language === 'hi' ? "चावल" : "Rice" },
@@ -44,6 +47,13 @@ const FarmingTools = () => {
     { id: "cotton", name: language === 'hi' ? "कपास" : "Cotton" },
     { id: "sugarcane", name: language === 'hi' ? "गन्ना" : "Sugarcane" },
     { id: "corn", name: language === 'hi' ? "मक्का" : "Corn" },
+    { id: "potato", name: language === 'hi' ? "आलू" : "Potato" },
+    { id: "tomato", name: language === 'hi' ? "टमाटर" : "Tomato" },
+    { id: "onion", name: language === 'hi' ? "प्याज" : "Onion" },
+    { id: "soybean", name: language === 'hi' ? "सोयाबीन" : "Soybean" },
+    { id: "mustard", name: language === 'hi' ? "सरसों" : "Mustard" },
+    { id: "groundnut", name: language === 'hi' ? "मूंगफली" : "Groundnut" },
+    { id: "chilli", name: language === 'hi' ? "मिर्च" : "Chilli" },
   ];
 
   const pesticides: Record<string, PesticideInfo[]> = {
@@ -234,18 +244,55 @@ const FarmingTools = () => {
           </p>
         </div>
 
-        {/* Crop Selector */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {crops.map((crop) => (
-            <Button
-              key={crop.id}
-              variant={selectedCrop === crop.id ? "default" : "outline"}
-              onClick={() => setSelectedCrop(crop.id)}
-              className="rounded-full"
-            >
-              {crop.name}
-            </Button>
-          ))}
+        {/* Crop Selector with Search */}
+        <div className="mb-8 space-y-4">
+          {/* Search Input */}
+          <div className="flex justify-center">
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder={language === 'hi' ? "फसल खोजें या लिखें..." : "Search or type crop name..."}
+                value={customCrop}
+                onChange={(e) => {
+                  setCustomCrop(e.target.value);
+                  if (e.target.value) {
+                    setShowCustomInput(true);
+                    // Check if entered value matches any crop
+                    const matchedCrop = crops.find(c => 
+                      c.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                      c.id.toLowerCase().includes(e.target.value.toLowerCase())
+                    );
+                    if (matchedCrop) {
+                      setSelectedCrop(matchedCrop.id);
+                    }
+                  } else {
+                    setShowCustomInput(false);
+                  }
+                }}
+                className="pl-10 h-12 rounded-full border-2"
+              />
+            </div>
+          </div>
+
+          {/* Quick Select Buttons */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {crops.map((crop) => (
+              <Button
+                key={crop.id}
+                variant={selectedCrop === crop.id && !showCustomInput ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setSelectedCrop(crop.id);
+                  setCustomCrop("");
+                  setShowCustomInput(false);
+                }}
+                className="rounded-full"
+              >
+                {crop.name}
+              </Button>
+            ))}
+          </div>
         </div>
 
         <Tabs defaultValue="pesticides" className="w-full">
