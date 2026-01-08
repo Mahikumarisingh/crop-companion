@@ -47,6 +47,8 @@ const FarmingTools = () => {
     { id: "cotton", name: language === 'hi' ? "कपास" : "Cotton" },
     { id: "sugarcane", name: language === 'hi' ? "गन्ना" : "Sugarcane" },
     { id: "corn", name: language === 'hi' ? "मक्का" : "Corn" },
+    { id: "bajra", name: language === 'hi' ? "बाजरा" : "Pearl Millet" },
+    { id: "jowar", name: language === 'hi' ? "ज्वार" : "Sorghum" },
     { id: "potato", name: language === 'hi' ? "आलू" : "Potato" },
     { id: "tomato", name: language === 'hi' ? "टमाटर" : "Tomato" },
     { id: "onion", name: language === 'hi' ? "प्याज" : "Onion" },
@@ -54,6 +56,9 @@ const FarmingTools = () => {
     { id: "mustard", name: language === 'hi' ? "सरसों" : "Mustard" },
     { id: "groundnut", name: language === 'hi' ? "मूंगफली" : "Groundnut" },
     { id: "chilli", name: language === 'hi' ? "मिर्च" : "Chilli" },
+    { id: "moong", name: language === 'hi' ? "मूंग" : "Green Gram" },
+    { id: "urad", name: language === 'hi' ? "उड़द" : "Black Gram" },
+    { id: "chana", name: language === 'hi' ? "चना" : "Chickpea" },
   ];
 
   const pesticides: Record<string, PesticideInfo[]> = {
@@ -108,6 +113,121 @@ const FarmingTools = () => {
         timing: language === 'hi' ? "अंडे से लार्वा निकलने पर" : "When larvae emerge from eggs",
         safety: language === 'hi' ? "जैविक खेती में भी उपयोग" : "Can use in organic farming"
       }
+    ],
+    bajra: [
+      {
+        name: language === 'hi' ? "क्विनालफॉस" : "Quinalphos",
+        target: language === 'hi' ? "तना छेदक, शूट फ्लाई" : "Stem borer, Shoot fly",
+        dosage: language === 'hi' ? "2 मिली/लीटर पानी" : "2 ml/litre water",
+        timing: language === 'hi' ? "बुवाई के 20-25 दिन बाद" : "20-25 days after sowing",
+        safety: language === 'hi' ? "सुबह छिड़काव करें" : "Spray in morning"
+      },
+      {
+        name: language === 'hi' ? "मैंकोजेब" : "Mancozeb",
+        target: language === 'hi' ? "डाउनी मिल्ड्यू, अर्गट" : "Downy mildew, Ergot",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "रोग दिखने पर" : "When disease appears",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    jowar: [
+      {
+        name: language === 'hi' ? "कार्बेरिल" : "Carbaryl",
+        target: language === 'hi' ? "शूट फ्लाई, स्टेम बोरर" : "Shoot fly, Stem borer",
+        dosage: language === 'hi' ? "2 ग्राम/लीटर पानी" : "2 gm/litre water",
+        timing: language === 'hi' ? "बुवाई के 15-20 दिन बाद" : "15-20 days after sowing",
+        safety: language === 'hi' ? "21 दिन का अंतराल" : "21 days interval"
+      }
+    ],
+    potato: [
+      {
+        name: language === 'hi' ? "मेटालैक्सिल + मैंकोजेब" : "Metalaxyl + Mancozeb",
+        target: language === 'hi' ? "लेट ब्लाइट, अर्ली ब्लाइट" : "Late blight, Early blight",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "रोग दिखने से पहले" : "Before disease appears",
+        safety: language === 'hi' ? "7-10 दिन का अंतराल" : "7-10 days interval"
+      }
+    ],
+    tomato: [
+      {
+        name: language === 'hi' ? "अबामेक्टिन" : "Abamectin",
+        target: language === 'hi' ? "लीफ माइनर, व्हाइटफ्लाई" : "Leaf miner, Whitefly",
+        dosage: language === 'hi' ? "0.5 मिली/लीटर पानी" : "0.5 ml/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "5 दिन का अंतराल" : "5 days interval"
+      }
+    ],
+    onion: [
+      {
+        name: language === 'hi' ? "थायोमेथोक्सम" : "Thiamethoxam",
+        target: language === 'hi' ? "थ्रिप्स, एफिड" : "Thrips, Aphid",
+        dosage: language === 'hi' ? "0.25 ग्राम/लीटर पानी" : "0.25 gm/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    soybean: [
+      {
+        name: language === 'hi' ? "लैम्ब्डा साइहैलोथ्रिन" : "Lambda Cyhalothrin",
+        target: language === 'hi' ? "स्टेम फ्लाई, गर्डल बीटल" : "Stem fly, Girdle beetle",
+        dosage: language === 'hi' ? "1 मिली/लीटर पानी" : "1 ml/litre water",
+        timing: language === 'hi' ? "फूल आने के समय" : "During flowering",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
+    ],
+    mustard: [
+      {
+        name: language === 'hi' ? "डाइमेथोएट" : "Dimethoate",
+        target: language === 'hi' ? "एफिड, पेंटेड बग" : "Aphid, Painted bug",
+        dosage: language === 'hi' ? "2 मिली/लीटर पानी" : "2 ml/litre water",
+        timing: language === 'hi' ? "फूल आने से पहले" : "Before flowering",
+        safety: language === 'hi' ? "21 दिन का अंतराल" : "21 days interval"
+      }
+    ],
+    groundnut: [
+      {
+        name: language === 'hi' ? "क्लोरपायरीफॉस" : "Chlorpyrifos",
+        target: language === 'hi' ? "सफेद ग्रब, दीमक" : "White grub, Termite",
+        dosage: language === 'hi' ? "4 मिली/लीटर पानी" : "4 ml/litre water",
+        timing: language === 'hi' ? "बुवाई से पहले मिट्टी में" : "In soil before sowing",
+        safety: language === 'hi' ? "मिट्टी उपचार" : "Soil treatment"
+      }
+    ],
+    chilli: [
+      {
+        name: language === 'hi' ? "फिप्रोनिल" : "Fipronil",
+        target: language === 'hi' ? "थ्रिप्स, माइट" : "Thrips, Mite",
+        dosage: language === 'hi' ? "1 मिली/लीटर पानी" : "1 ml/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    moong: [
+      {
+        name: language === 'hi' ? "इमिडाक्लोप्रिड" : "Imidacloprid",
+        target: language === 'hi' ? "सफेद मक्खी, जैसिड" : "Whitefly, Jassid",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    urad: [
+      {
+        name: language === 'hi' ? "डाइमेथोएट" : "Dimethoate",
+        target: language === 'hi' ? "एफिड, जैसिड" : "Aphid, Jassid",
+        dosage: language === 'hi' ? "2 मिली/लीटर पानी" : "2 ml/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
+    ],
+    chana: [
+      {
+        name: language === 'hi' ? "क्विनालफॉस" : "Quinalphos",
+        target: language === 'hi' ? "पॉड बोरर" : "Pod borer",
+        dosage: language === 'hi' ? "2 मिली/लीटर पानी" : "2 ml/litre water",
+        timing: language === 'hi' ? "फूल आने के समय" : "During flowering",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
     ]
   };
 
@@ -157,6 +277,108 @@ const FarmingTools = () => {
         application: language === 'hi' ? "10 किग्रा/एकड़" : "10 kg/acre",
         timing: language === 'hi' ? "बुवाई से पहले मिट्टी में" : "In soil before sowing"
       }
+    ],
+    bajra: [
+      {
+        name: language === 'hi' ? "DAP" : "DAP",
+        nutrients: language === 'hi' ? "18% N, 46% P" : "18% N, 46% P",
+        application: language === 'hi' ? "25 किग्रा/एकड़" : "25 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      },
+      {
+        name: language === 'hi' ? "यूरिया" : "Urea",
+        nutrients: language === 'hi' ? "46% नाइट्रोजन" : "46% Nitrogen",
+        application: language === 'hi' ? "30-40 किग्रा/एकड़" : "30-40 kg/acre",
+        timing: language === 'hi' ? "बुवाई के 25-30 दिन बाद" : "25-30 days after sowing"
+      }
+    ],
+    jowar: [
+      {
+        name: language === 'hi' ? "NPK 20:20:0" : "NPK 20:20:0",
+        nutrients: language === 'hi' ? "नाइट्रोजन, फॉस्फोरस" : "Nitrogen, Phosphorus",
+        application: language === 'hi' ? "40 किग्रा/एकड़" : "40 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      }
+    ],
+    potato: [
+      {
+        name: language === 'hi' ? "NPK 10:26:26" : "NPK 10:26:26",
+        nutrients: language === 'hi' ? "संतुलित पोषक तत्व" : "Balanced nutrients",
+        application: language === 'hi' ? "80-100 किग्रा/एकड़" : "80-100 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At planting time"
+      }
+    ],
+    tomato: [
+      {
+        name: language === 'hi' ? "NPK 19:19:19" : "NPK 19:19:19",
+        nutrients: language === 'hi' ? "संतुलित पोषक" : "Balanced nutrients",
+        application: language === 'hi' ? "5 ग्राम/लीटर पानी" : "5 gm/litre water",
+        timing: language === 'hi' ? "हर 15 दिन पर स्प्रे" : "Spray every 15 days"
+      }
+    ],
+    onion: [
+      {
+        name: language === 'hi' ? "सल्फर" : "Sulphur",
+        nutrients: language === 'hi' ? "90% सल्फर" : "90% Sulphur",
+        application: language === 'hi' ? "10-15 किग्रा/एकड़" : "10-15 kg/acre",
+        timing: language === 'hi' ? "रोपाई के समय" : "At transplanting"
+      }
+    ],
+    soybean: [
+      {
+        name: language === 'hi' ? "SSP + राइजोबियम" : "SSP + Rhizobium",
+        nutrients: language === 'hi' ? "फॉस्फोरस + जैविक" : "Phosphorus + Organic",
+        application: language === 'hi' ? "50 किग्रा/एकड़" : "50 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      }
+    ],
+    mustard: [
+      {
+        name: language === 'hi' ? "सल्फर 90%" : "Sulphur 90%",
+        nutrients: language === 'hi' ? "सल्फर" : "Sulphur",
+        application: language === 'hi' ? "10 किग्रा/एकड़" : "10 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      }
+    ],
+    groundnut: [
+      {
+        name: language === 'hi' ? "जिप्सम" : "Gypsum",
+        nutrients: language === 'hi' ? "कैल्शियम, सल्फर" : "Calcium, Sulphur",
+        application: language === 'hi' ? "100 किग्रा/एकड़" : "100 kg/acre",
+        timing: language === 'hi' ? "फूल आने के समय" : "At flowering"
+      }
+    ],
+    chilli: [
+      {
+        name: language === 'hi' ? "कैल्शियम नाइट्रेट" : "Calcium Nitrate",
+        nutrients: language === 'hi' ? "कैल्शियम, नाइट्रोजन" : "Calcium, Nitrogen",
+        application: language === 'hi' ? "5 ग्राम/लीटर पानी" : "5 gm/litre water",
+        timing: language === 'hi' ? "फल बनते समय" : "During fruiting"
+      }
+    ],
+    moong: [
+      {
+        name: language === 'hi' ? "DAP + राइजोबियम" : "DAP + Rhizobium",
+        nutrients: language === 'hi' ? "फॉस्फोरस + जैविक" : "Phosphorus + Organic",
+        application: language === 'hi' ? "20 किग्रा/एकड़" : "20 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      }
+    ],
+    urad: [
+      {
+        name: language === 'hi' ? "SSP" : "SSP",
+        nutrients: language === 'hi' ? "16% फॉस्फोरस" : "16% Phosphorus",
+        application: language === 'hi' ? "40 किग्रा/एकड़" : "40 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      }
+    ],
+    chana: [
+      {
+        name: language === 'hi' ? "DAP + पोटाश" : "DAP + Potash",
+        nutrients: language === 'hi' ? "N, P, K" : "N, P, K",
+        application: language === 'hi' ? "30 किग्रा/एकड़" : "30 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      }
     ]
   };
 
@@ -205,6 +427,108 @@ const FarmingTools = () => {
         symptoms: language === 'hi' ? "पत्तियों पर भूरे लंबे धब्बे" : "Long brown spots on leaves",
         treatment: language === 'hi' ? "मैंकोजेब 2.5 ग्राम/लीटर" : "Mancozeb 2.5 gm/litre",
         prevention: language === 'hi' ? "फसल अवशेष हटाएं, फसल चक्र" : "Remove crop residue, crop rotation"
+      }
+    ],
+    bajra: [
+      {
+        name: language === 'hi' ? "डाउनी मिल्ड्यू" : "Downy Mildew",
+        symptoms: language === 'hi' ? "पत्तियों पर सफेद पाउडर, बाली में दाने नहीं" : "White powder on leaves, no grains in ear",
+        treatment: language === 'hi' ? "मेटालैक्सिल से बीज उपचार" : "Seed treatment with Metalaxyl",
+        prevention: language === 'hi' ? "प्रतिरोधी किस्में, बीज उपचार" : "Resistant varieties, seed treatment"
+      },
+      {
+        name: language === 'hi' ? "अर्गट" : "Ergot",
+        symptoms: language === 'hi' ? "बाली से मीठा रस निकलना" : "Sweet liquid oozing from ear",
+        treatment: language === 'hi' ? "मैंकोजेब 0.2% छिड़काव" : "Spray Mancozeb 0.2%",
+        prevention: language === 'hi' ? "स्वस्थ बीज, समय पर बुवाई" : "Healthy seeds, timely sowing"
+      }
+    ],
+    jowar: [
+      {
+        name: language === 'hi' ? "ग्रेन मोल्ड" : "Grain Mold",
+        symptoms: language === 'hi' ? "दानों पर फफूंद" : "Mold on grains",
+        treatment: language === 'hi' ? "कार्बेंडाजिम छिड़काव" : "Spray Carbendazim",
+        prevention: language === 'hi' ? "सूखे मौसम में कटाई" : "Harvest in dry weather"
+      }
+    ],
+    potato: [
+      {
+        name: language === 'hi' ? "लेट ब्लाइट" : "Late Blight",
+        symptoms: language === 'hi' ? "पत्तियों पर भूरे धब्बे, तेजी से फैलना" : "Brown spots on leaves, rapid spread",
+        treatment: language === 'hi' ? "मैंकोजेब + मेटालैक्सिल" : "Mancozeb + Metalaxyl",
+        prevention: language === 'hi' ? "प्रतिरोधी किस्में, जल निकासी" : "Resistant varieties, drainage"
+      }
+    ],
+    tomato: [
+      {
+        name: language === 'hi' ? "पत्ती मोड़क विषाणु" : "Leaf Curl Virus",
+        symptoms: language === 'hi' ? "पत्तियां मुड़ना, पीला पड़ना" : "Leaf curling, yellowing",
+        treatment: language === 'hi' ? "प्रभावित पौधे निकालें" : "Remove affected plants",
+        prevention: language === 'hi' ? "सफेद मक्खी नियंत्रण" : "Whitefly control"
+      }
+    ],
+    onion: [
+      {
+        name: language === 'hi' ? "पर्पल ब्लॉच" : "Purple Blotch",
+        symptoms: language === 'hi' ? "पत्तियों पर बैंगनी धब्बे" : "Purple spots on leaves",
+        treatment: language === 'hi' ? "मैंकोजेब 2.5 ग्राम/लीटर" : "Mancozeb 2.5 gm/litre",
+        prevention: language === 'hi' ? "फसल चक्र, जल निकासी" : "Crop rotation, drainage"
+      }
+    ],
+    soybean: [
+      {
+        name: language === 'hi' ? "पीला मोजैक" : "Yellow Mosaic",
+        symptoms: language === 'hi' ? "पत्तियों पर पीले धब्बे" : "Yellow patches on leaves",
+        treatment: language === 'hi' ? "प्रभावित पौधे निकालें" : "Remove affected plants",
+        prevention: language === 'hi' ? "सफेद मक्खी नियंत्रण" : "Whitefly control"
+      }
+    ],
+    mustard: [
+      {
+        name: language === 'hi' ? "अल्टरनेरिया ब्लाइट" : "Alternaria Blight",
+        symptoms: language === 'hi' ? "पत्तियों पर गोल धब्बे" : "Round spots on leaves",
+        treatment: language === 'hi' ? "मैंकोजेब + आइप्रोडियॉन" : "Mancozeb + Iprodione",
+        prevention: language === 'hi' ? "स्वस्थ बीज, फसल चक्र" : "Healthy seeds, crop rotation"
+      }
+    ],
+    groundnut: [
+      {
+        name: language === 'hi' ? "टिक्का रोग" : "Tikka Disease",
+        symptoms: language === 'hi' ? "पत्तियों पर गोल धब्बे" : "Round spots on leaves",
+        treatment: language === 'hi' ? "कार्बेंडाजिम 1 ग्राम/लीटर" : "Carbendazim 1 gm/litre",
+        prevention: language === 'hi' ? "प्रतिरोधी किस्में" : "Resistant varieties"
+      }
+    ],
+    chilli: [
+      {
+        name: language === 'hi' ? "डाई बैक" : "Die Back",
+        symptoms: language === 'hi' ? "तना सूखना, ऊपर से नीचे" : "Stem drying, top to bottom",
+        treatment: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड" : "Copper Oxychloride",
+        prevention: language === 'hi' ? "स्वस्थ बीज, जल निकासी" : "Healthy seeds, drainage"
+      }
+    ],
+    moong: [
+      {
+        name: language === 'hi' ? "पीला मोजैक" : "Yellow Mosaic",
+        symptoms: language === 'hi' ? "पत्तियां पीली, विकृत" : "Yellow, deformed leaves",
+        treatment: language === 'hi' ? "प्रभावित पौधे निकालें" : "Remove affected plants",
+        prevention: language === 'hi' ? "प्रतिरोधी किस्में" : "Resistant varieties"
+      }
+    ],
+    urad: [
+      {
+        name: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery Mildew",
+        symptoms: language === 'hi' ? "पत्तियों पर सफेद पाउडर" : "White powder on leaves",
+        treatment: language === 'hi' ? "सल्फर 2 ग्राम/लीटर" : "Sulphur 2 gm/litre",
+        prevention: language === 'hi' ? "हवादार जगह" : "Good ventilation"
+      }
+    ],
+    chana: [
+      {
+        name: language === 'hi' ? "विल्ट" : "Wilt",
+        symptoms: language === 'hi' ? "पौधा अचानक सूखना" : "Sudden plant drying",
+        treatment: language === 'hi' ? "ट्राइकोडर्मा से बीज उपचार" : "Seed treatment with Trichoderma",
+        prevention: language === 'hi' ? "फसल चक्र, प्रतिरोधी किस्में" : "Crop rotation, resistant varieties"
       }
     ]
   };
