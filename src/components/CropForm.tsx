@@ -284,35 +284,35 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
             )}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Soil Type */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="soilType" className="text-base font-medium">
-                  {t('soilType')}
-                </Label>
-                <SoilTypeHelper 
-                  onSoilTypeDetected={(type) => setFormData({ ...formData, soilType: type })} 
-                />
-              </div>
-              <Select
-                value={formData.soilType}
-                onValueChange={(value) => setFormData({ ...formData, soilType: value })}
-              >
-                <SelectTrigger id="soilType" className="h-12">
-                  <SelectValue placeholder={t('selectSoilType')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="clay">{t('clay')}</SelectItem>
-                  <SelectItem value="sandy">{t('sandy')}</SelectItem>
-                  <SelectItem value="loamy">{t('loamy')}</SelectItem>
-                  <SelectItem value="silt">{t('silt')}</SelectItem>
-                  <SelectItem value="peaty">{t('peat')}</SelectItem>
-                  <SelectItem value="chalky">{t('chalky')}</SelectItem>
-                </SelectContent>
-              </Select>
+          {/* Soil Type with Helper */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Label htmlFor="soilType" className="text-base font-medium">
+                {t('soilType')}
+              </Label>
+              <SoilTypeHelper 
+                onSoilTypeDetected={(type) => setFormData({ ...formData, soilType: type })} 
+              />
             </div>
+            <Select
+              value={formData.soilType}
+              onValueChange={(value) => setFormData({ ...formData, soilType: value })}
+            >
+              <SelectTrigger id="soilType" className="h-12">
+                <SelectValue placeholder={t('selectSoilType')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="clay">{t('clay')}</SelectItem>
+                <SelectItem value="sandy">{t('sandy')}</SelectItem>
+                <SelectItem value="loamy">{t('loamy')}</SelectItem>
+                <SelectItem value="silt">{t('silt')}</SelectItem>
+                <SelectItem value="peaty">{t('peat')}</SelectItem>
+                <SelectItem value="chalky">{t('chalky')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
+          <div className="grid md:grid-cols-2 gap-6">
             {/* Climate */}
             <div className="space-y-2">
               <Label htmlFor="climate" className="text-base font-medium">
