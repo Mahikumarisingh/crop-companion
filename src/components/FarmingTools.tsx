@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Bug, Leaf, Thermometer, CloudSun, AlertTriangle, CheckCircle, Info, Search } from "lucide-react";
+import { Bug, Leaf, Thermometer, CloudSun, AlertTriangle, CheckCircle, Info, Search, IndianRupee, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 interface PesticideInfo {
   name: string;
@@ -33,6 +33,14 @@ interface WeatherAlert {
   type: "warning" | "info" | "success";
   title: string;
   description: string;
+}
+
+interface MandiPrice {
+  market: string;
+  price: number;
+  unit: string;
+  trend: "up" | "down" | "stable";
+  change: string;
 }
 
 const FarmingTools = () => {
@@ -551,6 +559,97 @@ const FarmingTools = () => {
     }
   ];
 
+  const mandiPrices: Record<string, MandiPrice[]> = {
+    rice: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 2850, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹120" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 2780, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "कोयंबटूर मंडी" : "Coimbatore Mandi", price: 2920, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹85" },
+      { market: language === 'hi' ? "गुंटूर मंडी" : "Guntur Mandi", price: 2650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹45" }
+    ],
+    wheat: [
+      { market: language === 'hi' ? "खन्ना मंडी, पंजाब" : "Khanna Mandi, Punjab", price: 2275, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹75" },
+      { market: language === 'hi' ? "हापुड़ मंडी, UP" : "Hapur Mandi, UP", price: 2320, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "इंदौर मंडी, MP" : "Indore Mandi, MP", price: 2180, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹35" },
+      { market: language === 'hi' ? "जयपुर मंडी" : "Jaipur Mandi", price: 2250, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹50" }
+    ],
+    cotton: [
+      { market: language === 'hi' ? "राजकोट मंडी, गुजरात" : "Rajkot Mandi, Gujarat", price: 6850, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹200" },
+      { market: language === 'hi' ? "अकोला मंडी, महाराष्ट्र" : "Akola Mandi, Maharashtra", price: 6720, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "गुंटूर मंडी, AP" : "Guntur Mandi, AP", price: 6580, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹80" },
+      { market: language === 'hi' ? "सिरसा मंडी, हरियाणा" : "Sirsa Mandi, Haryana", price: 6900, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹150" }
+    ],
+    sugarcane: [
+      { market: language === 'hi' ? "मुजफ्फरनगर मंडी, UP" : "Muzaffarnagar Mandi, UP", price: 350, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "कोल्हापुर मंडी" : "Kolhapur Mandi", price: 340, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹15" },
+      { market: language === 'hi' ? "मेरठ मंडी" : "Meerut Mandi", price: 355, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" }
+    ],
+    corn: [
+      { market: language === 'hi' ? "दावणगेरे मंडी, कर्नाटक" : "Davangere Mandi, Karnataka", price: 2150, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹65" },
+      { market: language === 'hi' ? "गुलबर्गा मंडी" : "Gulbarga Mandi", price: 2080, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹40" },
+      { market: language === 'hi' ? "उदयपुर मंडी" : "Udaipur Mandi", price: 2200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" }
+    ],
+    bajra: [
+      { market: language === 'hi' ? "जोधपुर मंडी" : "Jodhpur Mandi", price: 2450, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹95" },
+      { market: language === 'hi' ? "जयपुर मंडी" : "Jaipur Mandi", price: 2380, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "अहमदाबाद मंडी" : "Ahmedabad Mandi", price: 2520, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹70" }
+    ],
+    jowar: [
+      { market: language === 'hi' ? "सोलापुर मंडी" : "Solapur Mandi", price: 3200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹110" },
+      { market: language === 'hi' ? "लातूर मंडी" : "Latur Mandi", price: 3050, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "बीजापुर मंडी" : "Bijapur Mandi", price: 3150, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹55" }
+    ],
+    potato: [
+      { market: language === 'hi' ? "आगरा मंडी" : "Agra Mandi", price: 1250, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹85" },
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1380, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "कोलकाता मंडी" : "Kolkata Mandi", price: 1420, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹60" }
+    ],
+    tomato: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 2800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹350" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 3200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹280" },
+      { market: language === 'hi' ? "मदनपल्ली मंडी, AP" : "Madanapalle Mandi, AP", price: 1850, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" }
+    ],
+    onion: [
+      { market: language === 'hi' ? "लासलगांव मंडी" : "Lasalgaon Mandi", price: 1650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹120" },
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1920, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "नासिक मंडी" : "Nashik Mandi", price: 1580, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹95" }
+    ],
+    soybean: [
+      { market: language === 'hi' ? "इंदौर मंडी, MP" : "Indore Mandi, MP", price: 4850, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹180" },
+      { market: language === 'hi' ? "लातूर मंडी" : "Latur Mandi", price: 4720, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "उज्जैन मंडी" : "Ujjain Mandi", price: 4680, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹95" }
+    ],
+    mustard: [
+      { market: language === 'hi' ? "कोटा मंडी, राजस्थान" : "Kota Mandi, Rajasthan", price: 5450, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹220" },
+      { market: language === 'hi' ? "अलवर मंडी" : "Alwar Mandi", price: 5380, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "ग्वालियर मंडी" : "Gwalior Mandi", price: 5520, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹150" }
+    ],
+    groundnut: [
+      { market: language === 'hi' ? "राजकोट मंडी" : "Rajkot Mandi", price: 5850, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹175" },
+      { market: language === 'hi' ? "जूनागढ़ मंडी" : "Junagadh Mandi", price: 5720, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "अनंतपुर मंडी, AP" : "Anantapur Mandi, AP", price: 5680, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹65" }
+    ],
+    chilli: [
+      { market: language === 'hi' ? "गुंटूर मंडी, AP" : "Guntur Mandi, AP", price: 18500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹850" },
+      { market: language === 'hi' ? "खम्मम मंडी" : "Khammam Mandi", price: 17200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "वारंगल मंडी" : "Warangal Mandi", price: 16800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹400" }
+    ],
+    moong: [
+      { market: language === 'hi' ? "जोधपुर मंडी" : "Jodhpur Mandi", price: 7850, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹280" },
+      { market: language === 'hi' ? "बीकानेर मंडी" : "Bikaner Mandi", price: 7650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "इंदौर मंडी" : "Indore Mandi", price: 7920, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹195" }
+    ],
+    urad: [
+      { market: language === 'hi' ? "इंदौर मंडी, MP" : "Indore Mandi, MP", price: 7250, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹210" },
+      { market: language === 'hi' ? "लातूर मंडी" : "Latur Mandi", price: 7120, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "अकोला मंडी" : "Akola Mandi", price: 6980, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹120" }
+    ],
+    chana: [
+      { market: language === 'hi' ? "इंदौर मंडी, MP" : "Indore Mandi, MP", price: 5650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹165" },
+      { market: language === 'hi' ? "बीकानेर मंडी" : "Bikaner Mandi", price: 5520, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "लातूर मंडी" : "Latur Mandi", price: 5480, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹85" }
+    ]
+  };
+
   return (
     <section className="py-16 px-4 bg-background" id="farming-tools">
       <div className="container mx-auto max-w-6xl">
@@ -619,8 +718,12 @@ const FarmingTools = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="pesticides" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+        <Tabs defaultValue="mandi" className="w-full">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsTrigger value="mandi" className="flex items-center gap-2">
+              <IndianRupee className="w-4 h-4" />
+              <span className="hidden sm:inline">{language === 'hi' ? "मंडी भाव" : "Mandi Prices"}</span>
+            </TabsTrigger>
             <TabsTrigger value="pesticides" className="flex items-center gap-2">
               <Bug className="w-4 h-4" />
               <span className="hidden sm:inline">{language === 'hi' ? "कीटनाशक" : "Pesticides"}</span>
@@ -638,6 +741,56 @@ const FarmingTools = () => {
               <span className="hidden sm:inline">{language === 'hi' ? "मौसम" : "Weather"}</span>
             </TabsTrigger>
           </TabsList>
+
+          {/* Mandi Prices Tab */}
+          <TabsContent value="mandi">
+            <div className="mb-4 p-4 bg-muted/50 rounded-lg flex items-center gap-2">
+              <Info className="w-5 h-5 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">
+                {language === 'hi' 
+                  ? "नोट: ये भाव संकेतक हैं और वास्तविक मंडी दरों से भिन्न हो सकते हैं। कृपया बेचने से पहले अपनी स्थानीय मंडी से संपर्क करें।" 
+                  : "Note: These prices are indicative and may vary from actual mandi rates. Please contact your local mandi before selling."}
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              {(mandiPrices[selectedCrop] || []).map((price, index) => (
+                <Card key={index} className="border-l-4 border-l-primary">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center justify-between">
+                      <span className="flex items-center gap-2">
+                        <IndianRupee className="w-5 h-5 text-primary" />
+                        {price.market}
+                      </span>
+                      <Badge 
+                        variant={price.trend === 'up' ? 'default' : price.trend === 'down' ? 'destructive' : 'secondary'}
+                        className="flex items-center gap-1"
+                      >
+                        {price.trend === 'up' && <TrendingUp className="w-3 h-3" />}
+                        {price.trend === 'down' && <TrendingDown className="w-3 h-3" />}
+                        {price.trend === 'stable' && <Minus className="w-3 h-3" />}
+                        {price.change}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-end gap-2">
+                      <span className="text-3xl font-bold text-primary">₹{price.price.toLocaleString()}</span>
+                      <span className="text-muted-foreground mb-1">/ {language === 'hi' ? "क्विंटल" : "quintal"}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      {language === 'hi' ? "आज का भाव" : "Today's rate"} • {new Date().toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-IN')}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            {(!mandiPrices[selectedCrop] || mandiPrices[selectedCrop].length === 0) && (
+              <div className="text-center py-12 text-muted-foreground">
+                <IndianRupee className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>{language === 'hi' ? "इस फसल के लिए मंडी भाव उपलब्ध नहीं है" : "Mandi prices not available for this crop"}</p>
+              </div>
+            )}
+          </TabsContent>
 
           {/* Pesticides Tab */}
           <TabsContent value="pesticides">
