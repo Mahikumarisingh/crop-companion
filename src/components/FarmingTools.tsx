@@ -67,6 +67,9 @@ const FarmingTools = () => {
     { id: "moong", name: language === 'hi' ? "मूंग" : "Green Gram" },
     { id: "urad", name: language === 'hi' ? "उड़द" : "Black Gram" },
     { id: "chana", name: language === 'hi' ? "चना" : "Chickpea" },
+    { id: "mango", name: language === 'hi' ? "आम" : "Mango" },
+    { id: "banana", name: language === 'hi' ? "केला" : "Banana" },
+    { id: "guava", name: language === 'hi' ? "अमरूद" : "Guava" },
   ];
 
   const pesticides: Record<string, PesticideInfo[]> = {
@@ -236,6 +239,54 @@ const FarmingTools = () => {
         timing: language === 'hi' ? "फूल आने के समय" : "During flowering",
         safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
       }
+    ],
+    mango: [
+      {
+        name: language === 'hi' ? "इमिडाक्लोप्रिड" : "Imidacloprid",
+        target: language === 'hi' ? "हॉपर, मिली बग" : "Hopper, Mealy bug",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "फूल आने से पहले और बाद" : "Before and after flowering",
+        safety: language === 'hi' ? "15 दिन का अंतराल" : "15 days interval"
+      },
+      {
+        name: language === 'hi' ? "कार्बेंडाजिम" : "Carbendazim",
+        target: language === 'hi' ? "पाउडरी मिल्ड्यू, एन्थ्रेक्नोज" : "Powdery mildew, Anthracnose",
+        dosage: language === 'hi' ? "1 ग्राम/लीटर पानी" : "1 gm/litre water",
+        timing: language === 'hi' ? "फूल और फल लगने पर" : "During flowering and fruiting",
+        safety: language === 'hi' ? "10 दिन का अंतराल" : "10 days interval"
+      }
+    ],
+    banana: [
+      {
+        name: language === 'hi' ? "क्लोरपायरीफॉस" : "Chlorpyrifos",
+        target: language === 'hi' ? "राइजोम वीविल, तना छेदक" : "Rhizome weevil, Stem borer",
+        dosage: language === 'hi' ? "2.5 मिली/लीटर पानी" : "2.5 ml/litre water",
+        timing: language === 'hi' ? "रोपाई के बाद" : "After planting",
+        safety: language === 'hi' ? "मिट्टी में उपयोग" : "Soil application"
+      },
+      {
+        name: language === 'hi' ? "कार्बेंडाजिम + मैंकोजेब" : "Carbendazim + Mancozeb",
+        target: language === 'hi' ? "सिगाटोका, पनामा विल्ट" : "Sigatoka, Panama wilt",
+        dosage: language === 'hi' ? "2 ग्राम/लीटर पानी" : "2 gm/litre water",
+        timing: language === 'hi' ? "रोग दिखने पर" : "When disease appears",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    guava: [
+      {
+        name: language === 'hi' ? "डाइमेथोएट" : "Dimethoate",
+        target: language === 'hi' ? "फ्रूट फ्लाई, एफिड" : "Fruit fly, Aphid",
+        dosage: language === 'hi' ? "2 मिली/लीटर पानी" : "2 ml/litre water",
+        timing: language === 'hi' ? "फल लगने के समय" : "During fruiting",
+        safety: language === 'hi' ? "21 दिन का अंतराल" : "21 days interval"
+      },
+      {
+        name: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड" : "Copper Oxychloride",
+        target: language === 'hi' ? "एन्थ्रेक्नोज, कैंकर" : "Anthracnose, Canker",
+        dosage: language === 'hi' ? "3 ग्राम/लीटर पानी" : "3 gm/litre water",
+        timing: language === 'hi' ? "बारिश के बाद" : "After rain",
+        safety: language === 'hi' ? "10 दिन का अंतराल" : "10 days interval"
+      }
     ]
   };
 
@@ -386,6 +437,48 @@ const FarmingTools = () => {
         nutrients: language === 'hi' ? "N, P, K" : "N, P, K",
         application: language === 'hi' ? "30 किग्रा/एकड़" : "30 kg/acre",
         timing: language === 'hi' ? "बुवाई के समय" : "At sowing time"
+      }
+    ],
+    mango: [
+      {
+        name: language === 'hi' ? "NPK 10:26:26" : "NPK 10:26:26",
+        nutrients: language === 'hi' ? "संतुलित पोषक तत्व" : "Balanced nutrients",
+        application: language === 'hi' ? "500 ग्राम/पेड़/वर्ष उम्र" : "500 gm/tree/year of age",
+        timing: language === 'hi' ? "मानसून से पहले और बाद" : "Before and after monsoon"
+      },
+      {
+        name: language === 'hi' ? "पोटेशियम सल्फेट" : "Potassium Sulphate",
+        nutrients: language === 'hi' ? "50% K, 18% S" : "50% K, 18% S",
+        application: language === 'hi' ? "200 ग्राम/पेड़" : "200 gm/tree",
+        timing: language === 'hi' ? "फल लगने के समय" : "During fruiting"
+      }
+    ],
+    banana: [
+      {
+        name: language === 'hi' ? "यूरिया" : "Urea",
+        nutrients: language === 'hi' ? "46% नाइट्रोजन" : "46% Nitrogen",
+        application: language === 'hi' ? "200 ग्राम/पौधा" : "200 gm/plant",
+        timing: language === 'hi' ? "रोपाई के 2, 4, 6 महीने बाद" : "2, 4, 6 months after planting"
+      },
+      {
+        name: language === 'hi' ? "MOP (पोटाश)" : "MOP (Potash)",
+        nutrients: language === 'hi' ? "60% K2O" : "60% K2O",
+        application: language === 'hi' ? "300 ग्राम/पौधा" : "300 gm/plant",
+        timing: language === 'hi' ? "फूल आने से पहले" : "Before flowering"
+      }
+    ],
+    guava: [
+      {
+        name: language === 'hi' ? "गोबर की खाद" : "FYM",
+        nutrients: language === 'hi' ? "जैविक पोषक" : "Organic nutrients",
+        application: language === 'hi' ? "25-30 किग्रा/पेड़" : "25-30 kg/tree",
+        timing: language === 'hi' ? "साल में एक बार" : "Once a year"
+      },
+      {
+        name: language === 'hi' ? "NPK 15:15:15" : "NPK 15:15:15",
+        nutrients: language === 'hi' ? "संतुलित NPK" : "Balanced NPK",
+        application: language === 'hi' ? "500 ग्राम/पेड़" : "500 gm/tree",
+        timing: language === 'hi' ? "फूल आने से पहले" : "Before flowering"
       }
     ]
   };
@@ -538,6 +631,48 @@ const FarmingTools = () => {
         treatment: language === 'hi' ? "ट्राइकोडर्मा से बीज उपचार" : "Seed treatment with Trichoderma",
         prevention: language === 'hi' ? "फसल चक्र, प्रतिरोधी किस्में" : "Crop rotation, resistant varieties"
       }
+    ],
+    mango: [
+      {
+        name: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery Mildew",
+        symptoms: language === 'hi' ? "फूलों और पत्तियों पर सफेद पाउडर" : "White powder on flowers and leaves",
+        treatment: language === 'hi' ? "सल्फर डस्टिंग या वेटेबल सल्फर" : "Sulphur dusting or wettable sulphur",
+        prevention: language === 'hi' ? "समय पर छिड़काव, हवादार बाग" : "Timely spraying, ventilated orchard"
+      },
+      {
+        name: language === 'hi' ? "एन्थ्रेक्नोज" : "Anthracnose",
+        symptoms: language === 'hi' ? "फलों पर काले धब्बे, सड़न" : "Black spots on fruits, rotting",
+        treatment: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड 3 ग्राम/लीटर" : "Copper Oxychloride 3 gm/litre",
+        prevention: language === 'hi' ? "बाग की सफाई, छंटाई" : "Orchard sanitation, pruning"
+      }
+    ],
+    banana: [
+      {
+        name: language === 'hi' ? "पनामा विल्ट" : "Panama Wilt",
+        symptoms: language === 'hi' ? "पत्तियां पीली, तना टूटना" : "Yellow leaves, stem splitting",
+        treatment: language === 'hi' ? "प्रभावित पौधे निकालें, मिट्टी उपचार" : "Remove affected plants, soil treatment",
+        prevention: language === 'hi' ? "प्रतिरोधी किस्में, स्वस्थ पौधे" : "Resistant varieties, healthy plants"
+      },
+      {
+        name: language === 'hi' ? "सिगाटोका" : "Sigatoka",
+        symptoms: language === 'hi' ? "पत्तियों पर पीले-भूरे धब्बे" : "Yellow-brown spots on leaves",
+        treatment: language === 'hi' ? "मैंकोजेब + कार्बेंडाजिम" : "Mancozeb + Carbendazim",
+        prevention: language === 'hi' ? "पुरानी पत्तियां हटाएं" : "Remove old leaves"
+      }
+    ],
+    guava: [
+      {
+        name: language === 'hi' ? "विल्ट (मुरझान)" : "Wilt",
+        symptoms: language === 'hi' ? "पत्तियां पीली, पौधा सूखना" : "Yellow leaves, plant drying",
+        treatment: language === 'hi' ? "ट्राइकोडर्मा मिट्टी में डालें" : "Apply Trichoderma to soil",
+        prevention: language === 'hi' ? "जल निकासी, स्वस्थ पौधे" : "Drainage, healthy plants"
+      },
+      {
+        name: language === 'hi' ? "फल सड़न" : "Fruit Rot",
+        symptoms: language === 'hi' ? "फलों पर भूरे धब्बे, सड़न" : "Brown spots on fruits, rotting",
+        treatment: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड छिड़काव" : "Copper Oxychloride spray",
+        prevention: language === 'hi' ? "फलों को बारिश से बचाएं" : "Protect fruits from rain"
+      }
     ]
   };
 
@@ -647,6 +782,22 @@ const FarmingTools = () => {
       { market: language === 'hi' ? "इंदौर मंडी, MP" : "Indore Mandi, MP", price: 5650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹165" },
       { market: language === 'hi' ? "बीकानेर मंडी" : "Bikaner Mandi", price: 5520, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
       { market: language === 'hi' ? "लातूर मंडी" : "Latur Mandi", price: 5480, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹85" }
+    ],
+    mango: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 4500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹350" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 5200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹280" },
+      { market: language === 'hi' ? "रत्नागिरी मंडी" : "Ratnagiri Mandi", price: 8500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "मलिहाबाद मंडी, UP" : "Malihabad Mandi, UP", price: 3800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹150" }
+    ],
+    banana: [
+      { market: language === 'hi' ? "जलगांव मंडी" : "Jalgaon Mandi", price: 1850, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹120" },
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 2200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "कोयंबटूर मंडी" : "Coimbatore Mandi", price: 1680, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹80" }
+    ],
+    guava: [
+      { market: language === 'hi' ? "इलाहाबाद मंडी, UP" : "Allahabad Mandi, UP", price: 3200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹180" },
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 3800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "बरेली मंडी" : "Bareilly Mandi", price: 2950, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹95" }
     ]
   };
 
