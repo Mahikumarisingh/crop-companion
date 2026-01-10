@@ -69,6 +69,23 @@ const FarmingTools = () => {
     { id: "mango", name: language === 'hi' ? "आम" : "Mango" },
     { id: "banana", name: language === 'hi' ? "केला" : "Banana" },
     { id: "guava", name: language === 'hi' ? "अमरूद" : "Guava" },
+    { id: "sweetpotato", name: language === 'hi' ? "शकरकंद" : "Sweet Potato" },
+    { id: "apple", name: language === 'hi' ? "सेब" : "Apple" },
+    { id: "orange", name: language === 'hi' ? "संतरा" : "Orange" },
+    { id: "papaya", name: language === 'hi' ? "पपीता" : "Papaya" },
+    { id: "grapes", name: language === 'hi' ? "अंगूर" : "Grapes" },
+    { id: "brinjal", name: language === 'hi' ? "बैंगन" : "Brinjal" },
+    { id: "cabbage", name: language === 'hi' ? "पत्ता गोभी" : "Cabbage" },
+    { id: "cauliflower", name: language === 'hi' ? "फूल गोभी" : "Cauliflower" },
+    { id: "okra", name: language === 'hi' ? "भिंडी" : "Okra" },
+    { id: "garlic", name: language === 'hi' ? "लहसुन" : "Garlic" },
+    { id: "ginger", name: language === 'hi' ? "अदरक" : "Ginger" },
+    { id: "turmeric", name: language === 'hi' ? "हल्दी" : "Turmeric" },
+    { id: "watermelon", name: language === 'hi' ? "तरबूज" : "Watermelon" },
+    { id: "cucumber", name: language === 'hi' ? "खीरा" : "Cucumber" },
+    { id: "pumpkin", name: language === 'hi' ? "कद्दू" : "Pumpkin" },
+    { id: "carrot", name: language === 'hi' ? "गाजर" : "Carrot" },
+    { id: "peas", name: language === 'hi' ? "मटर" : "Peas" },
   ];
 
   const pesticides: Record<string, PesticideInfo[]> = {
@@ -286,6 +303,194 @@ const FarmingTools = () => {
         timing: language === 'hi' ? "बारिश के बाद" : "After rain",
         safety: language === 'hi' ? "10 दिन का अंतराल" : "10 days interval"
       }
+    ],
+    sweetpotato: [
+      {
+        name: language === 'hi' ? "क्लोरपायरीफॉस" : "Chlorpyrifos",
+        target: language === 'hi' ? "स्वीट पोटैटो वीविल, दीमक" : "Sweet potato weevil, Termite",
+        dosage: language === 'hi' ? "2.5 मिली/लीटर पानी" : "2.5 ml/litre water",
+        timing: language === 'hi' ? "रोपाई के 30 दिन बाद" : "30 days after planting",
+        safety: language === 'hi' ? "मिट्टी उपचार" : "Soil treatment"
+      },
+      {
+        name: language === 'hi' ? "इमिडाक्लोप्रिड" : "Imidacloprid",
+        target: language === 'hi' ? "व्हाइटफ्लाई, एफिड" : "Whitefly, Aphid",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
+    ],
+    apple: [
+      {
+        name: language === 'hi' ? "मैंकोजेब" : "Mancozeb",
+        target: language === 'hi' ? "स्कैब, पाउडरी मिल्ड्यू" : "Scab, Powdery mildew",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "फूल आने से पहले" : "Before flowering",
+        safety: language === 'hi' ? "10 दिन का अंतराल" : "10 days interval"
+      },
+      {
+        name: language === 'hi' ? "इमिडाक्लोप्रिड" : "Imidacloprid",
+        target: language === 'hi' ? "एफिड, वूली एफिड" : "Aphid, Woolly aphid",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "वसंत में नई पत्तियों पर" : "On new leaves in spring",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
+    ],
+    orange: [
+      {
+        name: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड" : "Copper Oxychloride",
+        target: language === 'hi' ? "कैंकर, गमोसिस" : "Canker, Gummosis",
+        dosage: language === 'hi' ? "3 ग्राम/लीटर पानी" : "3 gm/litre water",
+        timing: language === 'hi' ? "बारिश के बाद" : "After rain",
+        safety: language === 'hi' ? "15 दिन का अंतराल" : "15 days interval"
+      },
+      {
+        name: language === 'hi' ? "डाइमेथोएट" : "Dimethoate",
+        target: language === 'hi' ? "सिट्रस साइला, लीफ माइनर" : "Citrus psylla, Leaf miner",
+        dosage: language === 'hi' ? "2 मिली/लीटर पानी" : "2 ml/litre water",
+        timing: language === 'hi' ? "नई पत्तियों पर" : "On new leaves",
+        safety: language === 'hi' ? "21 दिन का अंतराल" : "21 days interval"
+      }
+    ],
+    papaya: [
+      {
+        name: language === 'hi' ? "इमिडाक्लोप्रिड" : "Imidacloprid",
+        target: language === 'hi' ? "एफिड, व्हाइटफ्लाई (वायरस वाहक)" : "Aphid, Whitefly (virus vectors)",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "15 दिन के अंतराल पर" : "At 15 days interval",
+        safety: language === 'hi' ? "वायरस रोकथाम के लिए जरूरी" : "Essential for virus prevention"
+      },
+      {
+        name: language === 'hi' ? "मैंकोजेब" : "Mancozeb",
+        target: language === 'hi' ? "एन्थ्रेक्नोज, पाउडरी मिल्ड्यू" : "Anthracnose, Powdery mildew",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "फल लगने के समय" : "During fruiting",
+        safety: language === 'hi' ? "10 दिन का अंतराल" : "10 days interval"
+      }
+    ],
+    grapes: [
+      {
+        name: language === 'hi' ? "सल्फर" : "Sulphur",
+        target: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery mildew",
+        dosage: language === 'hi' ? "2 ग्राम/लीटर पानी" : "2 gm/litre water",
+        timing: language === 'hi' ? "नई पत्तियों पर" : "On new leaves",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      },
+      {
+        name: language === 'hi' ? "मैंकोजेब" : "Mancozeb",
+        target: language === 'hi' ? "डाउनी मिल्ड्यू, एन्थ्रेक्नोज" : "Downy mildew, Anthracnose",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "बारिश के मौसम में" : "During rainy season",
+        safety: language === 'hi' ? "10 दिन का अंतराल" : "10 days interval"
+      }
+    ],
+    brinjal: [
+      {
+        name: language === 'hi' ? "स्पिनोसैड" : "Spinosad",
+        target: language === 'hi' ? "फल और तना छेदक" : "Fruit and shoot borer",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "फूल आने के समय" : "During flowering",
+        safety: language === 'hi' ? "जैविक खेती में उपयोग" : "Safe for organic farming"
+      }
+    ],
+    cabbage: [
+      {
+        name: language === 'hi' ? "बीटी (बैसिलस थुरिंजिएंसिस)" : "Bt (Bacillus thuringiensis)",
+        target: language === 'hi' ? "डायमंड बैक मोथ, कैटरपिलर" : "Diamond back moth, Caterpillar",
+        dosage: language === 'hi' ? "1 ग्राम/लीटर पानी" : "1 gm/litre water",
+        timing: language === 'hi' ? "लार्वा दिखने पर" : "When larvae appear",
+        safety: language === 'hi' ? "जैविक कीटनाशक" : "Bio-pesticide"
+      }
+    ],
+    cauliflower: [
+      {
+        name: language === 'hi' ? "इमामेक्टिन बेंजोएट" : "Emamectin Benzoate",
+        target: language === 'hi' ? "बोरर, कैटरपिलर" : "Borer, Caterpillar",
+        dosage: language === 'hi' ? "0.4 ग्राम/लीटर पानी" : "0.4 gm/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    okra: [
+      {
+        name: language === 'hi' ? "इमिडाक्लोप्रिड" : "Imidacloprid",
+        target: language === 'hi' ? "जैसिड, व्हाइटफ्लाई" : "Jassid, Whitefly",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
+    ],
+    garlic: [
+      {
+        name: language === 'hi' ? "मैंकोजेब" : "Mancozeb",
+        target: language === 'hi' ? "पर्पल ब्लॉच, स्टेम्फिलियम ब्लाइट" : "Purple blotch, Stemphylium blight",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "रोग दिखने पर" : "When disease appears",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    ginger: [
+      {
+        name: language === 'hi' ? "मेटालैक्सिल + मैंकोजेब" : "Metalaxyl + Mancozeb",
+        target: language === 'hi' ? "सॉफ्ट रॉट, राइजोम रॉट" : "Soft rot, Rhizome rot",
+        dosage: language === 'hi' ? "2 ग्राम/लीटर पानी" : "2 gm/litre water",
+        timing: language === 'hi' ? "बारिश के मौसम में" : "During rainy season",
+        safety: language === 'hi' ? "मिट्टी में भी उपयोग" : "Soil drench also"
+      }
+    ],
+    turmeric: [
+      {
+        name: language === 'hi' ? "क्लोरपायरीफॉस" : "Chlorpyrifos",
+        target: language === 'hi' ? "राइजोम फ्लाई, शूट बोरर" : "Rhizome fly, Shoot borer",
+        dosage: language === 'hi' ? "2.5 मिली/लीटर पानी" : "2.5 ml/litre water",
+        timing: language === 'hi' ? "रोपाई के 45 दिन बाद" : "45 days after planting",
+        safety: language === 'hi' ? "मिट्टी उपचार" : "Soil treatment"
+      }
+    ],
+    watermelon: [
+      {
+        name: language === 'hi' ? "मैंकोजेब" : "Mancozeb",
+        target: language === 'hi' ? "डाउनी मिल्ड्यू, एन्थ्रेक्नोज" : "Downy mildew, Anthracnose",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "बेल बढ़ने के समय" : "During vine growth",
+        safety: language === 'hi' ? "7 दिन का अंतराल" : "7 days interval"
+      }
+    ],
+    cucumber: [
+      {
+        name: language === 'hi' ? "इमिडाक्लोप्रिड" : "Imidacloprid",
+        target: language === 'hi' ? "एफिड, व्हाइटफ्लाई" : "Aphid, Whitefly",
+        dosage: language === 'hi' ? "0.3 मिली/लीटर पानी" : "0.3 ml/litre water",
+        timing: language === 'hi' ? "कीट दिखने पर" : "When pests appear",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
+    ],
+    pumpkin: [
+      {
+        name: language === 'hi' ? "कार्बेरिल" : "Carbaryl",
+        target: language === 'hi' ? "फ्रूट फ्लाई, रेड पम्पकिन बीटल" : "Fruit fly, Red pumpkin beetle",
+        dosage: language === 'hi' ? "2 ग्राम/लीटर पानी" : "2 gm/litre water",
+        timing: language === 'hi' ? "फल बनने के समय" : "During fruiting",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
+    ],
+    carrot: [
+      {
+        name: language === 'hi' ? "मैंकोजेब" : "Mancozeb",
+        target: language === 'hi' ? "अल्टरनेरिया ब्लाइट" : "Alternaria blight",
+        dosage: language === 'hi' ? "2.5 ग्राम/लीटर पानी" : "2.5 gm/litre water",
+        timing: language === 'hi' ? "रोग दिखने पर" : "When disease appears",
+        safety: language === 'hi' ? "10 दिन का अंतराल" : "10 days interval"
+      }
+    ],
+    peas: [
+      {
+        name: language === 'hi' ? "डाइमेथोएट" : "Dimethoate",
+        target: language === 'hi' ? "पॉड बोरर, एफिड" : "Pod borer, Aphid",
+        dosage: language === 'hi' ? "2 मिली/लीटर पानी" : "2 ml/litre water",
+        timing: language === 'hi' ? "फूल आने के समय" : "During flowering",
+        safety: language === 'hi' ? "14 दिन का अंतराल" : "14 days interval"
+      }
     ]
   };
 
@@ -478,6 +683,172 @@ const FarmingTools = () => {
         nutrients: language === 'hi' ? "संतुलित NPK" : "Balanced NPK",
         application: language === 'hi' ? "500 ग्राम/पेड़" : "500 gm/tree",
         timing: language === 'hi' ? "फूल आने से पहले" : "Before flowering"
+      }
+    ],
+    sweetpotato: [
+      {
+        name: language === 'hi' ? "गोबर की खाद" : "FYM",
+        nutrients: language === 'hi' ? "जैविक पोषक" : "Organic nutrients",
+        application: language === 'hi' ? "8-10 टन/हेक्टेयर" : "8-10 ton/hectare",
+        timing: language === 'hi' ? "खेत तैयारी के समय" : "During field preparation"
+      },
+      {
+        name: language === 'hi' ? "पोटाश (MOP)" : "Potash (MOP)",
+        nutrients: language === 'hi' ? "60% K2O" : "60% K2O",
+        application: language === 'hi' ? "40 किग्रा/एकड़" : "40 kg/acre",
+        timing: language === 'hi' ? "रोपाई के समय" : "At planting"
+      }
+    ],
+    apple: [
+      {
+        name: language === 'hi' ? "NPK 10:10:10" : "NPK 10:10:10",
+        nutrients: language === 'hi' ? "संतुलित NPK" : "Balanced NPK",
+        application: language === 'hi' ? "500 ग्राम-2 किग्रा/पेड़ (उम्र अनुसार)" : "500gm-2kg/tree (as per age)",
+        timing: language === 'hi' ? "फरवरी-मार्च" : "February-March"
+      },
+      {
+        name: language === 'hi' ? "कैल्शियम नाइट्रेट" : "Calcium Nitrate",
+        nutrients: language === 'hi' ? "15.5% N, 19% Ca" : "15.5% N, 19% Ca",
+        application: language === 'hi' ? "छिड़काव 5 ग्राम/लीटर" : "Spray 5 gm/litre",
+        timing: language === 'hi' ? "फल बनने के बाद" : "After fruit set"
+      }
+    ],
+    orange: [
+      {
+        name: language === 'hi' ? "यूरिया" : "Urea",
+        nutrients: language === 'hi' ? "46% नाइट्रोजन" : "46% Nitrogen",
+        application: language === 'hi' ? "500 ग्राम/पेड़" : "500 gm/tree",
+        timing: language === 'hi' ? "फूल आने से पहले" : "Before flowering"
+      },
+      {
+        name: language === 'hi' ? "जिंक सल्फेट" : "Zinc Sulphate",
+        nutrients: language === 'hi' ? "33% Zn" : "33% Zn",
+        application: language === 'hi' ? "छिड़काव 5 ग्राम/लीटर" : "Spray 5 gm/litre",
+        timing: language === 'hi' ? "नई पत्तियों पर" : "On new flush"
+      }
+    ],
+    papaya: [
+      {
+        name: language === 'hi' ? "यूरिया" : "Urea",
+        nutrients: language === 'hi' ? "46% नाइट्रोजन" : "46% Nitrogen",
+        application: language === 'hi' ? "200 ग्राम/पौधा हर 2 महीने" : "200 gm/plant every 2 months",
+        timing: language === 'hi' ? "रोपाई के बाद" : "After planting"
+      },
+      {
+        name: language === 'hi' ? "DAP" : "DAP",
+        nutrients: language === 'hi' ? "18% N, 46% P" : "18% N, 46% P",
+        application: language === 'hi' ? "150 ग्राम/पौधा" : "150 gm/plant",
+        timing: language === 'hi' ? "रोपाई के समय" : "At planting"
+      }
+    ],
+    grapes: [
+      {
+        name: language === 'hi' ? "NPK 19:19:19" : "NPK 19:19:19",
+        nutrients: language === 'hi' ? "संतुलित NPK" : "Balanced NPK",
+        application: language === 'hi' ? "5 ग्राम/लीटर छिड़काव" : "5 gm/litre spray",
+        timing: language === 'hi' ? "बेल बढ़ने के समय" : "During vine growth"
+      },
+      {
+        name: language === 'hi' ? "पोटेशियम सल्फेट" : "Potassium Sulphate",
+        nutrients: language === 'hi' ? "50% K, 18% S" : "50% K, 18% S",
+        application: language === 'hi' ? "500 ग्राम/बेल" : "500 gm/vine",
+        timing: language === 'hi' ? "फल पकने से पहले" : "Before fruit ripening"
+      }
+    ],
+    brinjal: [
+      {
+        name: language === 'hi' ? "DAP" : "DAP",
+        nutrients: language === 'hi' ? "18% N, 46% P" : "18% N, 46% P",
+        application: language === 'hi' ? "40 किग्रा/एकड़" : "40 kg/acre",
+        timing: language === 'hi' ? "रोपाई के समय" : "At transplanting"
+      }
+    ],
+    cabbage: [
+      {
+        name: language === 'hi' ? "यूरिया" : "Urea",
+        nutrients: language === 'hi' ? "46% नाइट्रोजन" : "46% Nitrogen",
+        application: language === 'hi' ? "50 किग्रा/एकड़" : "50 kg/acre",
+        timing: language === 'hi' ? "रोपाई के 15 और 30 दिन बाद" : "15 and 30 days after transplanting"
+      }
+    ],
+    cauliflower: [
+      {
+        name: language === 'hi' ? "बोरॉन" : "Boron",
+        nutrients: language === 'hi' ? "सूक्ष्म पोषक" : "Micronutrient",
+        application: language === 'hi' ? "1 किग्रा/एकड़" : "1 kg/acre",
+        timing: language === 'hi' ? "खेत तैयारी के समय" : "During field preparation"
+      }
+    ],
+    okra: [
+      {
+        name: language === 'hi' ? "NPK 10:26:26" : "NPK 10:26:26",
+        nutrients: language === 'hi' ? "संतुलित NPK" : "Balanced NPK",
+        application: language === 'hi' ? "40 किग्रा/एकड़" : "40 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing"
+      }
+    ],
+    garlic: [
+      {
+        name: language === 'hi' ? "सल्फर" : "Sulphur",
+        nutrients: language === 'hi' ? "90% S" : "90% S",
+        application: language === 'hi' ? "15 किग्रा/एकड़" : "15 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing"
+      }
+    ],
+    ginger: [
+      {
+        name: language === 'hi' ? "गोबर की खाद" : "FYM",
+        nutrients: language === 'hi' ? "जैविक पोषक" : "Organic nutrients",
+        application: language === 'hi' ? "15-20 टन/हेक्टेयर" : "15-20 ton/hectare",
+        timing: language === 'hi' ? "खेत तैयारी के समय" : "During field preparation"
+      }
+    ],
+    turmeric: [
+      {
+        name: language === 'hi' ? "NPK 10:26:26" : "NPK 10:26:26",
+        nutrients: language === 'hi' ? "संतुलित NPK" : "Balanced NPK",
+        application: language === 'hi' ? "50 किग्रा/एकड़" : "50 kg/acre",
+        timing: language === 'hi' ? "रोपाई के समय" : "At planting"
+      }
+    ],
+    watermelon: [
+      {
+        name: language === 'hi' ? "पोटाश" : "Potash",
+        nutrients: language === 'hi' ? "60% K2O" : "60% K2O",
+        application: language === 'hi' ? "30 किग्रा/एकड़" : "30 kg/acre",
+        timing: language === 'hi' ? "फल बनने के समय" : "During fruiting"
+      }
+    ],
+    cucumber: [
+      {
+        name: language === 'hi' ? "NPK 19:19:19" : "NPK 19:19:19",
+        nutrients: language === 'hi' ? "संतुलित NPK" : "Balanced NPK",
+        application: language === 'hi' ? "5 ग्राम/लीटर छिड़काव" : "5 gm/litre spray",
+        timing: language === 'hi' ? "बेल बढ़ने के समय" : "During vine growth"
+      }
+    ],
+    pumpkin: [
+      {
+        name: language === 'hi' ? "गोबर की खाद" : "FYM",
+        nutrients: language === 'hi' ? "जैविक पोषक" : "Organic nutrients",
+        application: language === 'hi' ? "10-15 टन/हेक्टेयर" : "10-15 ton/hectare",
+        timing: language === 'hi' ? "खेत तैयारी के समय" : "During field preparation"
+      }
+    ],
+    carrot: [
+      {
+        name: language === 'hi' ? "पोटाश" : "Potash",
+        nutrients: language === 'hi' ? "60% K2O" : "60% K2O",
+        application: language === 'hi' ? "25 किग्रा/एकड़" : "25 kg/acre",
+        timing: language === 'hi' ? "जड़ बनने के समय" : "During root development"
+      }
+    ],
+    peas: [
+      {
+        name: language === 'hi' ? "DAP" : "DAP",
+        nutrients: language === 'hi' ? "18% N, 46% P" : "18% N, 46% P",
+        application: language === 'hi' ? "40 किग्रा/एकड़" : "40 kg/acre",
+        timing: language === 'hi' ? "बुवाई के समय" : "At sowing"
       }
     ]
   };
@@ -672,6 +1043,172 @@ const FarmingTools = () => {
         treatment: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड छिड़काव" : "Copper Oxychloride spray",
         prevention: language === 'hi' ? "फलों को बारिश से बचाएं" : "Protect fruits from rain"
       }
+    ],
+    sweetpotato: [
+      {
+        name: language === 'hi' ? "वीविल क्षति" : "Weevil Damage",
+        symptoms: language === 'hi' ? "कंद में छेद, सड़न" : "Holes in tuber, rotting",
+        treatment: language === 'hi' ? "क्लोरपायरीफॉस मिट्टी में डालें" : "Apply Chlorpyrifos to soil",
+        prevention: language === 'hi' ? "समय पर कटाई, साफ खेती" : "Timely harvest, clean cultivation"
+      },
+      {
+        name: language === 'hi' ? "वायरस रोग" : "Virus Disease",
+        symptoms: language === 'hi' ? "पत्तियां मुड़ना, पीली नसें" : "Leaf curling, yellow veins",
+        treatment: language === 'hi' ? "संक्रमित पौधे निकालें" : "Remove infected plants",
+        prevention: language === 'hi' ? "स्वस्थ बेल, कीट नियंत्रण" : "Healthy vines, pest control"
+      }
+    ],
+    apple: [
+      {
+        name: language === 'hi' ? "स्कैब" : "Scab",
+        symptoms: language === 'hi' ? "फलों और पत्तियों पर काले धब्बे" : "Black spots on fruits and leaves",
+        treatment: language === 'hi' ? "मैंकोजेब + कार्बेंडाजिम छिड़काव" : "Mancozeb + Carbendazim spray",
+        prevention: language === 'hi' ? "प्रतिरोधी किस्में, पुरानी पत्तियां हटाएं" : "Resistant varieties, remove old leaves"
+      },
+      {
+        name: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery Mildew",
+        symptoms: language === 'hi' ? "पत्तियों पर सफेद पाउडर" : "White powder on leaves",
+        treatment: language === 'hi' ? "सल्फर या कार्बेंडाजिम छिड़काव" : "Sulphur or Carbendazim spray",
+        prevention: language === 'hi' ? "हवादार छंटाई" : "Pruning for ventilation"
+      }
+    ],
+    orange: [
+      {
+        name: language === 'hi' ? "सिट्रस कैंकर" : "Citrus Canker",
+        symptoms: language === 'hi' ? "पत्तियों और फलों पर उभरे धब्बे" : "Raised spots on leaves and fruits",
+        treatment: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड छिड़काव" : "Copper Oxychloride spray",
+        prevention: language === 'hi' ? "संक्रमित भाग काटें" : "Prune infected parts"
+      },
+      {
+        name: language === 'hi' ? "गमोसिस" : "Gummosis",
+        symptoms: language === 'hi' ? "तने से गोंद निकलना" : "Gum oozing from trunk",
+        treatment: language === 'hi' ? "बोर्डो पेस्ट लगाएं" : "Apply Bordeaux paste",
+        prevention: language === 'hi' ? "जल निकासी, तने को नम न रखें" : "Drainage, keep trunk dry"
+      }
+    ],
+    papaya: [
+      {
+        name: language === 'hi' ? "रिंग स्पॉट वायरस" : "Ring Spot Virus",
+        symptoms: language === 'hi' ? "पत्तियों पर पीले धब्बे, फलों पर रिंग" : "Yellow spots on leaves, rings on fruits",
+        treatment: language === 'hi' ? "कोई इलाज नहीं, पौधे निकालें" : "No cure, remove plants",
+        prevention: language === 'hi' ? "एफिड नियंत्रण, स्वस्थ पौधे" : "Aphid control, healthy plants"
+      },
+      {
+        name: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery Mildew",
+        symptoms: language === 'hi' ? "पत्तियों पर सफेद पाउडर" : "White powder on leaves",
+        treatment: language === 'hi' ? "सल्फर छिड़काव" : "Sulphur spray",
+        prevention: language === 'hi' ? "हवादार जगह रोपाई" : "Plant in airy location"
+      }
+    ],
+    grapes: [
+      {
+        name: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery Mildew",
+        symptoms: language === 'hi' ? "पत्तियों और दानों पर सफेद पाउडर" : "White powder on leaves and berries",
+        treatment: language === 'hi' ? "सल्फर या डिनोकैप छिड़काव" : "Sulphur or Dinocap spray",
+        prevention: language === 'hi' ? "हवादार छंटाई" : "Pruning for ventilation"
+      },
+      {
+        name: language === 'hi' ? "डाउनी मिल्ड्यू" : "Downy Mildew",
+        symptoms: language === 'hi' ? "पत्तियों के नीचे सफेद फफूंद" : "White fungus under leaves",
+        treatment: language === 'hi' ? "मैंकोजेब छिड़काव" : "Mancozeb spray",
+        prevention: language === 'hi' ? "जल निकासी, पत्तियां सूखी रखें" : "Drainage, keep leaves dry"
+      }
+    ],
+    brinjal: [
+      {
+        name: language === 'hi' ? "फल और तना छेदक" : "Fruit and Shoot Borer",
+        symptoms: language === 'hi' ? "तना और फल में छेद" : "Holes in stem and fruit",
+        treatment: language === 'hi' ? "स्पिनोसैड छिड़काव" : "Spinosad spray",
+        prevention: language === 'hi' ? "फेरोमोन ट्रैप, प्रभावित भाग काटें" : "Pheromone traps, remove affected parts"
+      }
+    ],
+    cabbage: [
+      {
+        name: language === 'hi' ? "ब्लैक रॉट" : "Black Rot",
+        symptoms: language === 'hi' ? "पत्तियों के किनारे काले, V-आकार" : "Black leaf margins, V-shaped",
+        treatment: language === 'hi' ? "कॉपर ऑक्सीक्लोराइड छिड़काव" : "Copper Oxychloride spray",
+        prevention: language === 'hi' ? "स्वस्थ बीज, फसल चक्र" : "Healthy seeds, crop rotation"
+      }
+    ],
+    cauliflower: [
+      {
+        name: language === 'hi' ? "बोरॉन की कमी" : "Boron Deficiency",
+        symptoms: language === 'hi' ? "फूल भूरा, खोखला" : "Brown, hollow curd",
+        treatment: language === 'hi' ? "बोरिक एसिड छिड़काव" : "Boric acid spray",
+        prevention: language === 'hi' ? "बोरॉन खाद डालें" : "Apply boron fertilizer"
+      }
+    ],
+    okra: [
+      {
+        name: language === 'hi' ? "येलो वेन मोज़ेक" : "Yellow Vein Mosaic",
+        symptoms: language === 'hi' ? "पत्तियों की नसें पीली" : "Yellow leaf veins",
+        treatment: language === 'hi' ? "कोई इलाज नहीं, पौधे निकालें" : "No cure, remove plants",
+        prevention: language === 'hi' ? "व्हाइटफ्लाई नियंत्रण, प्रतिरोधी किस्में" : "Whitefly control, resistant varieties"
+      }
+    ],
+    garlic: [
+      {
+        name: language === 'hi' ? "पर्पल ब्लॉच" : "Purple Blotch",
+        symptoms: language === 'hi' ? "पत्तियों पर बैंगनी धब्बे" : "Purple spots on leaves",
+        treatment: language === 'hi' ? "मैंकोजेब छिड़काव" : "Mancozeb spray",
+        prevention: language === 'hi' ? "फसल चक्र, जल निकासी" : "Crop rotation, drainage"
+      }
+    ],
+    ginger: [
+      {
+        name: language === 'hi' ? "सॉफ्ट रॉट" : "Soft Rot",
+        symptoms: language === 'hi' ? "राइजोम में पानी जैसी सड़न" : "Watery rot in rhizome",
+        treatment: language === 'hi' ? "मेटालैक्सिल मिट्टी में डालें" : "Apply Metalaxyl to soil",
+        prevention: language === 'hi' ? "जल निकासी, स्वस्थ बीज" : "Drainage, healthy seed"
+      }
+    ],
+    turmeric: [
+      {
+        name: language === 'hi' ? "राइजोम रॉट" : "Rhizome Rot",
+        symptoms: language === 'hi' ? "पत्तियां पीली, राइजोम सड़ी" : "Yellow leaves, rotted rhizome",
+        treatment: language === 'hi' ? "कार्बेंडाजिम मिट्टी में डालें" : "Apply Carbendazim to soil",
+        prevention: language === 'hi' ? "स्वस्थ बीज, जल निकासी" : "Healthy seed, drainage"
+      }
+    ],
+    watermelon: [
+      {
+        name: language === 'hi' ? "एन्थ्रेक्नोज" : "Anthracnose",
+        symptoms: language === 'hi' ? "पत्तियों और फलों पर गहरे धब्बे" : "Dark spots on leaves and fruits",
+        treatment: language === 'hi' ? "मैंकोजेब छिड़काव" : "Mancozeb spray",
+        prevention: language === 'hi' ? "फसल चक्र, स्वच्छ बीज" : "Crop rotation, clean seeds"
+      }
+    ],
+    cucumber: [
+      {
+        name: language === 'hi' ? "डाउनी मिल्ड्यू" : "Downy Mildew",
+        symptoms: language === 'hi' ? "पत्तियों पर पीले धब्बे" : "Yellow spots on leaves",
+        treatment: language === 'hi' ? "मैंकोजेब छिड़काव" : "Mancozeb spray",
+        prevention: language === 'hi' ? "प्रतिरोधी किस्में" : "Resistant varieties"
+      }
+    ],
+    pumpkin: [
+      {
+        name: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery Mildew",
+        symptoms: language === 'hi' ? "पत्तियों पर सफेद पाउडर" : "White powder on leaves",
+        treatment: language === 'hi' ? "सल्फर छिड़काव" : "Sulphur spray",
+        prevention: language === 'hi' ? "हवादार जगह" : "Airy location"
+      }
+    ],
+    carrot: [
+      {
+        name: language === 'hi' ? "अल्टरनेरिया ब्लाइट" : "Alternaria Blight",
+        symptoms: language === 'hi' ? "पत्तियों पर भूरे धब्बे" : "Brown spots on leaves",
+        treatment: language === 'hi' ? "मैंकोजेब छिड़काव" : "Mancozeb spray",
+        prevention: language === 'hi' ? "स्वच्छ बीज, फसल चक्र" : "Clean seeds, crop rotation"
+      }
+    ],
+    peas: [
+      {
+        name: language === 'hi' ? "पाउडरी मिल्ड्यू" : "Powdery Mildew",
+        symptoms: language === 'hi' ? "पत्तियों पर सफेद पाउडर" : "White powder on leaves",
+        treatment: language === 'hi' ? "सल्फर छिड़काव" : "Sulphur spray",
+        prevention: language === 'hi' ? "समय पर बुवाई, प्रतिरोधी किस्में" : "Timely sowing, resistant varieties"
+      }
     ]
   };
 
@@ -797,6 +1334,91 @@ const FarmingTools = () => {
       { market: language === 'hi' ? "इलाहाबाद मंडी, UP" : "Allahabad Mandi, UP", price: 3200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹180" },
       { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 3800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
       { market: language === 'hi' ? "बरेली मंडी" : "Bareilly Mandi", price: 2950, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹95" }
+    ],
+    sweetpotato: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹120" },
+      { market: language === 'hi' ? "वाराणसी मंडी" : "Varanasi Mandi", price: 1650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "पटना मंडी" : "Patna Mandi", price: 1720, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹85" }
+    ],
+    apple: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 8500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹450" },
+      { market: language === 'hi' ? "शिमला मंडी" : "Shimla Mandi", price: 7200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "श्रीनगर मंडी" : "Srinagar Mandi", price: 6800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹320" }
+    ],
+    orange: [
+      { market: language === 'hi' ? "नागपुर मंडी" : "Nagpur Mandi", price: 4200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹280" },
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 4800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "पुणे मंडी" : "Pune Mandi", price: 4350, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹120" }
+    ],
+    papaya: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 2200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹150" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 2500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "बंगलौर मंडी" : "Bangalore Mandi", price: 2100, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹95" }
+    ],
+    grapes: [
+      { market: language === 'hi' ? "नासिक मंडी" : "Nashik Mandi", price: 5500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹380" },
+      { market: language === 'hi' ? "सांगली मंडी" : "Sangli Mandi", price: 5200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 6200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹450" }
+    ],
+    brinjal: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹120" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 1650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "बंगलौर मंडी" : "Bangalore Mandi", price: 1500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹80" }
+    ],
+    cabbage: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹95" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 1350, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "पुणे मंडी" : "Pune Mandi", price: 1150, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹65" }
+    ],
+    cauliflower: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹110" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 1650, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "जयपुर मंडी" : "Jaipur Mandi", price: 1380, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹75" }
+    ],
+    okra: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 2500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹180" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 2350, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "हैदराबाद मंडी" : "Hyderabad Mandi", price: 2200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹95" }
+    ],
+    garlic: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 8500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹450" },
+      { market: language === 'hi' ? "इंदौर मंडी" : "Indore Mandi", price: 7800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "जयपुर मंडी" : "Jaipur Mandi", price: 8200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹320" }
+    ],
+    ginger: [
+      { market: language === 'hi' ? "कोचीन मंडी" : "Cochin Mandi", price: 12500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹680" },
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 14200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 13500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹420" }
+    ],
+    turmeric: [
+      { market: language === 'hi' ? "निजामाबाद मंडी" : "Nizamabad Mandi", price: 9500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹520" },
+      { market: language === 'hi' ? "सांगली मंडी" : "Sangli Mandi", price: 8800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "इरोड मंडी" : "Erode Mandi", price: 10200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹380" }
+    ],
+    watermelon: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹85" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 1350, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "हैदराबाद मंडी" : "Hyderabad Mandi", price: 1100, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹65" }
+    ],
+    cucumber: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1600, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹95" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 1450, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "बंगलौर मंडी" : "Bangalore Mandi", price: 1350, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹65" }
+    ],
+    pumpkin: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 1100, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 1250, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹75" },
+      { market: language === 'hi' ? "पटना मंडी" : "Patna Mandi", price: 980, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "down", change: "-₹45" }
+    ],
+    carrot: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 2200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹140" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 2450, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "ऊटी मंडी" : "Ooty Mandi", price: 1800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹85" }
+    ],
+    peas: [
+      { market: language === 'hi' ? "आजादपुर मंडी, दिल्ली" : "Azadpur Mandi, Delhi", price: 4500, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹280" },
+      { market: language === 'hi' ? "वाशी मंडी, मुंबई" : "Vashi Mandi, Mumbai", price: 4200, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "stable", change: "₹0" },
+      { market: language === 'hi' ? "शिमला मंडी" : "Shimla Mandi", price: 3800, unit: language === 'hi' ? "₹/क्विंटल" : "₹/quintal", trend: "up", change: "+₹150" }
     ]
   };
 
