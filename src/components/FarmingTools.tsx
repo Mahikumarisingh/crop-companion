@@ -46,8 +46,7 @@ interface MandiPrice {
 const FarmingTools = () => {
   const { t, language } = useLanguage();
   const [selectedCrop, setSelectedCrop] = useState("rice");
-  const [customCrop, setCustomCrop] = useState("");
-  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const crops = [
     { id: "rice", name: language === 'hi' ? "चावल" : "Rice" },
@@ -826,22 +825,17 @@ const FarmingTools = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={language === 'hi' ? "फसल खोजें या लिखें..." : "Search or type crop name..."}
-                value={customCrop}
+                placeholder={language === 'hi' ? "फसल खोजें..." : "Search any crop or fruit..."}
+                value={searchQuery}
                 onChange={(e) => {
-                  setCustomCrop(e.target.value);
-                  if (e.target.value) {
-                    setShowCustomInput(true);
-                    // Check if entered value matches any crop
-                    const matchedCrop = crops.find(c => 
-                      c.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
-                      c.id.toLowerCase().includes(e.target.value.toLowerCase())
-                    );
-                    if (matchedCrop) {
-                      setSelectedCrop(matchedCrop.id);
-                    }
-                  } else {
-                    setShowCustomInput(false);
+                  setSearchQuery(e.target.value);
+                  // Check if entered value matches any crop
+                  const matchedCrop = crops.find(c => 
+                    c.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+                    c.id.toLowerCase().includes(e.target.value.toLowerCase())
+                  );
+                  if (matchedCrop) {
+                    setSelectedCrop(matchedCrop.id);
                   }
                 }}
                 className="pl-10 h-12 rounded-full border-2"
@@ -849,23 +843,28 @@ const FarmingTools = () => {
             </div>
           </div>
 
-          {/* Quick Select Buttons */}
+          {/* Filtered Crop Buttons */}
           <div className="flex flex-wrap justify-center gap-2">
-            {crops.map((crop) => (
-              <Button
-                key={crop.id}
-                variant={selectedCrop === crop.id && !showCustomInput ? "default" : "outline"}
-                size="sm"
-                onClick={() => {
-                  setSelectedCrop(crop.id);
-                  setCustomCrop("");
-                  setShowCustomInput(false);
-                }}
-                className="rounded-full"
-              >
-                {crop.name}
-              </Button>
-            ))}
+            {crops
+              .filter(crop => 
+                searchQuery === "" || 
+                crop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                crop.id.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((crop) => (
+                <Button
+                  key={crop.id}
+                  variant={selectedCrop === crop.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCrop(crop.id);
+                    setSearchQuery("");
+                  }}
+                  className="rounded-full"
+                >
+                  {crop.name}
+                </Button>
+              ))}
           </div>
         </div>
 
