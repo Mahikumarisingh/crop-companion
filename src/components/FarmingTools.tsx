@@ -45,7 +45,7 @@ interface MandiPrice {
 
 const FarmingTools = () => {
   const { t, language } = useLanguage();
-  const [selectedCrop, setSelectedCrop] = useState("rice");
+  const [selectedCrop, setSelectedCrop] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   const crops = [
@@ -1446,7 +1446,12 @@ const FarmingTools = () => {
                 placeholder={language === 'hi' ? "फसल या फल खोजें जैसे: गेहूं, टमाटर, आम..." : "Search crop/fruit like: Wheat, Tomato, Mango..."}
                 value={searchQuery}
                 onChange={(e) => {
-                  setSearchQuery(e.target.value);
+                  const value = e.target.value;
+                  setSearchQuery(value);
+                  // Clear selection when searching
+                  if (value) {
+                    setSelectedCrop("");
+                  }
                 }}
                 className="pl-12 h-14 text-lg rounded-full border-2 shadow-sm"
               />
@@ -1465,14 +1470,9 @@ const FarmingTools = () => {
                           setSelectedCrop(crop.id);
                           setSearchQuery("");
                         }}
-                        className={`w-full text-left px-4 py-3 hover:bg-muted transition-colors flex items-center justify-between ${
-                          selectedCrop === crop.id ? 'bg-primary/10 text-primary' : ''
-                        }`}
+                        className="w-full text-left px-4 py-3 hover:bg-muted transition-colors flex items-center justify-between first:rounded-t-xl last:rounded-b-xl"
                       >
                         <span className="font-medium">{crop.name}</span>
-                        {selectedCrop === crop.id && (
-                          <Badge variant="secondary">{language === 'hi' ? "चयनित" : "Selected"}</Badge>
-                        )}
                       </button>
                     ))}
                   {crops.filter(crop => 
@@ -1488,12 +1488,20 @@ const FarmingTools = () => {
             </div>
           </div>
           {/* Selected Crop Display */}
-          <div className="text-center mt-4">
-            <Badge variant="default" className="text-base px-4 py-2">
-              {language === 'hi' ? "चयनित फसल: " : "Selected: "}
-              {crops.find(c => c.id === selectedCrop)?.name || selectedCrop}
-            </Badge>
-          </div>
+          {selectedCrop && (
+            <div className="text-center mt-4">
+              <Badge variant="default" className="text-base px-4 py-2">
+                {language === 'hi' ? "चयनित फसल: " : "Selected: "}
+                {crops.find(c => c.id === selectedCrop)?.name || selectedCrop}
+              </Badge>
+            </div>
+          )}
+          {/* Prompt to search when no crop selected */}
+          {!selectedCrop && !searchQuery && (
+            <div className="text-center mt-4 text-muted-foreground">
+              {language === 'hi' ? "कृपया ऊपर सर्च बॉक्स में फसल का नाम लिखें" : "Please type a crop name in the search box above"}
+            </div>
+          )}
         </div>
 
         <Tabs defaultValue="mandi" className="w-full">
@@ -1522,140 +1530,188 @@ const FarmingTools = () => {
 
           {/* Mandi Prices Tab */}
           <TabsContent value="mandi">
-            <div className="mb-4 p-4 bg-muted/50 rounded-lg flex items-center gap-2">
-              <Info className="w-5 h-5 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                {language === 'hi' 
-                  ? "नोट: ये भाव संकेतक हैं और वास्तविक मंडी दरों से भिन्न हो सकते हैं। कृपया बेचने से पहले अपनी स्थानीय मंडी से संपर्क करें।" 
-                  : "Note: These prices are indicative and may vary from actual mandi rates. Please contact your local mandi before selling."}
-              </p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {(mandiPrices[selectedCrop] || []).map((price, index) => (
-                <Card key={index} className="border-l-4 border-l-primary">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="flex items-center justify-between">
-                      <span className="flex items-center gap-2">
-                        <IndianRupee className="w-5 h-5 text-primary" />
-                        {price.market}
-                      </span>
-                      <Badge 
-                        variant={price.trend === 'up' ? 'default' : price.trend === 'down' ? 'destructive' : 'secondary'}
-                        className="flex items-center gap-1"
-                      >
-                        {price.trend === 'up' && <TrendingUp className="w-3 h-3" />}
-                        {price.trend === 'down' && <TrendingDown className="w-3 h-3" />}
-                        {price.trend === 'stable' && <Minus className="w-3 h-3" />}
-                        {price.change}
-                      </Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-end gap-2">
-                      <span className="text-3xl font-bold text-primary">₹{price.price.toLocaleString()}</span>
-                      <span className="text-muted-foreground mb-1">/ {language === 'hi' ? "क्विंटल" : "quintal"}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {language === 'hi' ? "आज का भाव" : "Today's rate"} • {new Date().toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-IN')}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            {(!mandiPrices[selectedCrop] || mandiPrices[selectedCrop].length === 0) && (
-              <div className="text-center py-12 text-muted-foreground">
-                <IndianRupee className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>{language === 'hi' ? "इस फसल के लिए मंडी भाव उपलब्ध नहीं है" : "Mandi prices not available for this crop"}</p>
+            {selectedCrop ? (
+              <>
+                <div className="mb-4 p-4 bg-muted/50 rounded-lg flex items-center gap-2">
+                  <Info className="w-5 h-5 text-muted-foreground" />
+                  <p className="text-sm text-muted-foreground">
+                    {language === 'hi' 
+                      ? "नोट: ये भाव संकेतक हैं और वास्तविक मंडी दरों से भिन्न हो सकते हैं। कृपया बेचने से पहले अपनी स्थानीय मंडी से संपर्क करें।" 
+                      : "Note: These prices are indicative and may vary from actual mandi rates. Please contact your local mandi before selling."}
+                  </p>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {(mandiPrices[selectedCrop] || []).map((price, index) => (
+                    <Card key={index} className="border-l-4 border-l-primary">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center justify-between">
+                          <span className="flex items-center gap-2">
+                            <IndianRupee className="w-5 h-5 text-primary" />
+                            {price.market}
+                          </span>
+                          <Badge 
+                            variant={price.trend === 'up' ? 'default' : price.trend === 'down' ? 'destructive' : 'secondary'}
+                            className="flex items-center gap-1"
+                          >
+                            {price.trend === 'up' && <TrendingUp className="w-3 h-3" />}
+                            {price.trend === 'down' && <TrendingDown className="w-3 h-3" />}
+                            {price.trend === 'stable' && <Minus className="w-3 h-3" />}
+                            {price.change}
+                          </Badge>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-end gap-2">
+                          <span className="text-3xl font-bold text-primary">₹{price.price.toLocaleString()}</span>
+                          <span className="text-muted-foreground mb-1">/ {language === 'hi' ? "क्विंटल" : "quintal"}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">
+                          {language === 'hi' ? "आज का भाव" : "Today's rate"} • {new Date().toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-IN')}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                {(!mandiPrices[selectedCrop] || mandiPrices[selectedCrop].length === 0) && (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <IndianRupee className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>{language === 'hi' ? "इस फसल के लिए मंडी भाव उपलब्ध नहीं है" : "Mandi prices not available for this crop"}</p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-16 text-muted-foreground">
+                <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
               </div>
             )}
           </TabsContent>
 
           {/* Pesticides Tab */}
           <TabsContent value="pesticides">
-            <div className="grid md:grid-cols-2 gap-6">
-              {(pesticides[selectedCrop] || []).map((pesticide, index) => (
-                <Card key={index} className="border-l-4 border-l-orange-500">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Bug className="w-5 h-5 text-orange-500" />
-                      {pesticide.name}
-                    </CardTitle>
-                    <CardDescription>{pesticide.target}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-start gap-2">
-                      <Badge variant="outline">{language === 'hi' ? "मात्रा" : "Dosage"}</Badge>
-                      <span className="text-sm">{pesticide.dosage}</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <Badge variant="outline">{language === 'hi' ? "समय" : "Timing"}</Badge>
-                      <span className="text-sm">{pesticide.timing}</span>
-                    </div>
-                    <div className="flex items-start gap-2 text-amber-600">
-                      <AlertTriangle className="w-4 h-4 mt-0.5" />
-                      <span className="text-sm">{pesticide.safety}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {selectedCrop ? (
+              <div className="grid md:grid-cols-2 gap-6">
+                {(pesticides[selectedCrop] || []).map((pesticide, index) => (
+                  <Card key={index} className="border-l-4 border-l-orange-500">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Bug className="w-5 h-5 text-orange-500" />
+                        {pesticide.name}
+                      </CardTitle>
+                      <CardDescription>{pesticide.target}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex items-start gap-2">
+                        <Badge variant="outline">{language === 'hi' ? "मात्रा" : "Dosage"}</Badge>
+                        <span className="text-sm">{pesticide.dosage}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Badge variant="outline">{language === 'hi' ? "समय" : "Timing"}</Badge>
+                        <span className="text-sm">{pesticide.timing}</span>
+                      </div>
+                      <div className="flex items-start gap-2 text-amber-600">
+                        <AlertTriangle className="w-4 h-4 mt-0.5" />
+                        <span className="text-sm">{pesticide.safety}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                {(!pesticides[selectedCrop] || pesticides[selectedCrop].length === 0) && (
+                  <div className="col-span-2 text-center py-12 text-muted-foreground">
+                    <Bug className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>{language === 'hi' ? "इस फसल के लिए कीटनाशक जानकारी उपलब्ध नहीं है" : "Pesticide info not available for this crop"}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-16 text-muted-foreground">
+                <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
+              </div>
+            )}
           </TabsContent>
 
           {/* Fertilizers Tab */}
           <TabsContent value="fertilizers">
-            <div className="grid md:grid-cols-2 gap-6">
-              {(fertilizers[selectedCrop] || []).map((fertilizer, index) => (
-                <Card key={index} className="border-l-4 border-l-green-500">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Leaf className="w-5 h-5 text-green-500" />
-                      {fertilizer.name}
-                    </CardTitle>
-                    <CardDescription>{fertilizer.nutrients}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-start gap-2">
-                      <Badge variant="outline">{language === 'hi' ? "मात्रा" : "Application"}</Badge>
-                      <span className="text-sm">{fertilizer.application}</span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <Badge variant="outline">{language === 'hi' ? "समय" : "Timing"}</Badge>
-                      <span className="text-sm">{fertilizer.timing}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {selectedCrop ? (
+              <div className="grid md:grid-cols-2 gap-6">
+                {(fertilizers[selectedCrop] || []).map((fertilizer, index) => (
+                  <Card key={index} className="border-l-4 border-l-green-500">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Leaf className="w-5 h-5 text-green-500" />
+                        {fertilizer.name}
+                      </CardTitle>
+                      <CardDescription>{fertilizer.nutrients}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex items-start gap-2">
+                        <Badge variant="outline">{language === 'hi' ? "मात्रा" : "Application"}</Badge>
+                        <span className="text-sm">{fertilizer.application}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Badge variant="outline">{language === 'hi' ? "समय" : "Timing"}</Badge>
+                        <span className="text-sm">{fertilizer.timing}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                {(!fertilizers[selectedCrop] || fertilizers[selectedCrop].length === 0) && (
+                  <div className="col-span-2 text-center py-12 text-muted-foreground">
+                    <Leaf className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>{language === 'hi' ? "इस फसल के लिए खाद जानकारी उपलब्ध नहीं है" : "Fertilizer info not available for this crop"}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-16 text-muted-foreground">
+                <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
+              </div>
+            )}
           </TabsContent>
 
           {/* Diseases Tab */}
           <TabsContent value="diseases">
-            <div className="grid md:grid-cols-2 gap-6">
-              {(diseases[selectedCrop] || []).map((disease, index) => (
-                <Card key={index} className="border-l-4 border-l-red-500">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Thermometer className="w-5 h-5 text-red-500" />
-                      {disease.name}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div>
-                      <Badge variant="destructive" className="mb-2">{language === 'hi' ? "लक्षण" : "Symptoms"}</Badge>
-                      <p className="text-sm text-muted-foreground">{disease.symptoms}</p>
-                    </div>
-                    <div>
-                      <Badge variant="secondary" className="mb-2">{language === 'hi' ? "उपचार" : "Treatment"}</Badge>
-                      <p className="text-sm">{disease.treatment}</p>
-                    </div>
-                    <div>
-                      <Badge variant="outline" className="mb-2">{language === 'hi' ? "रोकथाम" : "Prevention"}</Badge>
-                      <p className="text-sm text-muted-foreground">{disease.prevention}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {selectedCrop ? (
+              <div className="grid md:grid-cols-2 gap-6">
+                {(diseases[selectedCrop] || []).map((disease, index) => (
+                  <Card key={index} className="border-l-4 border-l-red-500">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Thermometer className="w-5 h-5 text-red-500" />
+                        {disease.name}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div>
+                        <Badge variant="destructive" className="mb-2">{language === 'hi' ? "लक्षण" : "Symptoms"}</Badge>
+                        <p className="text-sm text-muted-foreground">{disease.symptoms}</p>
+                      </div>
+                      <div>
+                        <Badge variant="secondary" className="mb-2">{language === 'hi' ? "उपचार" : "Treatment"}</Badge>
+                        <p className="text-sm">{disease.treatment}</p>
+                      </div>
+                      <div>
+                        <Badge variant="outline" className="mb-2">{language === 'hi' ? "रोकथाम" : "Prevention"}</Badge>
+                        <p className="text-sm text-muted-foreground">{disease.prevention}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                {(!diseases[selectedCrop] || diseases[selectedCrop].length === 0) && (
+                  <div className="col-span-2 text-center py-12 text-muted-foreground">
+                    <Thermometer className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>{language === 'hi' ? "इस फसल के लिए रोग जानकारी उपलब्ध नहीं है" : "Disease info not available for this crop"}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-16 text-muted-foreground">
+                <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
+                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
+              </div>
+            )}
           </TabsContent>
 
           {/* Weather Tab */}
