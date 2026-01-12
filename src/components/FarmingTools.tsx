@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Bug, Leaf, Thermometer, CloudSun, AlertTriangle, CheckCircle, Info, Search, IndianRupee, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Bug, Leaf, Thermometer, CloudSun, AlertTriangle, CheckCircle, Info, Search, IndianRupee, TrendingUp, TrendingDown, Minus, Loader2, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 
 interface PesticideInfo {
   name: string;
@@ -43,10 +45,60 @@ interface MandiPrice {
   change: string;
 }
 
+interface AICropInfo {
+  cropName: string;
+  cropNameEnglish: string;
+  category: string;
+  pesticides: PesticideInfo[];
+  fertilizers: FertilizerInfo[];
+  diseases: DiseaseInfo[];
+  mandiPrices: MandiPrice[];
+  generalInfo?: {
+    season: string;
+    climate: string;
+    waterNeeds: string;
+    soilType: string;
+    growthPeriod: string;
+  };
+}
+
 const FarmingTools = () => {
   const { t, language } = useLanguage();
   const [selectedCrop, setSelectedCrop] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [aiCropInfo, setAiCropInfo] = useState<AICropInfo | null>(null);
+
+  const handleAISearch = async () => {
+    if (searchQuery.trim().length < 2) {
+      toast.error(language === 'hi' ? "कृपया कम से कम 2 अक्षर लिखें" : "Please enter at least 2 characters");
+      return;
+    }
+
+    setIsSearching(true);
+    setAiCropInfo(null);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('search-crop-info', {
+        body: { cropName: searchQuery.trim(), language }
+      });
+
+      if (error) throw error;
+
+      if (data?.cropInfo) {
+        setAiCropInfo(data.cropInfo);
+        setSelectedCrop(searchQuery.trim());
+        toast.success(language === 'hi' ? `${data.cropInfo.cropName} की जानकारी मिल गई!` : `Found information for ${data.cropInfo.cropNameEnglish || searchQuery}!`);
+      } else {
+        toast.error(language === 'hi' ? "जानकारी नहीं मिली, कृपया दोबारा प्रयास करें" : "Information not found, please try again");
+      }
+    } catch (error) {
+      console.error("AI Search error:", error);
+      toast.error(language === 'hi' ? "खोज में त्रुटि हुई, कृपया दोबारा प्रयास करें" : "Search failed, please try again");
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const crops = [
     { id: "rice", name: language === 'hi' ? "चावल" : "Rice" },
@@ -1456,50 +1508,52 @@ const FarmingTools = () => {
                 className="pl-12 h-14 text-lg rounded-full border-2 shadow-sm"
               />
               {/* Search Results Dropdown */}
-              {searchQuery && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-background border-2 rounded-2xl shadow-lg z-50 max-h-64 overflow-y-auto">
-                  {crops
-                    .filter(crop => 
-                      crop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                      crop.id.toLowerCase().includes(searchQuery.toLowerCase())
-                    )
-                    .map((crop) => (
-                      <button
-                        key={crop.id}
-                        onClick={() => {
-                          setSelectedCrop(crop.id);
-                          setSearchQuery("");
-                        }}
-                        className="w-full text-left px-4 py-3 hover:bg-muted transition-colors flex items-center justify-between first:rounded-t-xl last:rounded-b-xl"
-                      >
-                        <span className="font-medium">{crop.name}</span>
-                      </button>
-                    ))}
-                  {crops.filter(crop => 
-                    crop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    crop.id.toLowerCase().includes(searchQuery.toLowerCase())
-                  ).length === 0 && (
-                    <div className="px-4 py-3 text-muted-foreground text-center">
-                      {language === 'hi' ? "कोई फसल नहीं मिली" : "No crop found"}
-                    </div>
-                  )}
+            </div>
+          </div>
+
+          {/* AI Search Button */}
+          <div className="flex justify-center">
+            <Button
+              onClick={handleAISearch}
+              disabled={isSearching || searchQuery.trim().length < 2}
+              className="flex items-center gap-2 bg-gradient-to-r from-primary to-green-600 hover:from-primary/90 hover:to-green-600/90"
+              size="lg"
+            >
+              {isSearching ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  {language === 'hi' ? "खोज रहे हैं..." : "Searching..."}
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  {language === 'hi' ? "AI से जानकारी लें" : "Get AI Info"}
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* Selected Crop Display */}
+          {selectedCrop && aiCropInfo && (
+            <div className="text-center mt-4 space-y-2">
+              <Badge variant="default" className="text-base px-4 py-2">
+                {language === 'hi' ? "चयनित: " : "Selected: "}
+                {aiCropInfo.cropName}
+              </Badge>
+              {aiCropInfo.generalInfo && (
+                <div className="flex flex-wrap justify-center gap-2 mt-2">
+                  <Badge variant="outline">{language === 'hi' ? "मौसम: " : "Season: "}{aiCropInfo.generalInfo.season}</Badge>
+                  <Badge variant="outline">{language === 'hi' ? "पानी: " : "Water: "}{aiCropInfo.generalInfo.waterNeeds}</Badge>
+                  <Badge variant="outline">{language === 'hi' ? "समय: " : "Period: "}{aiCropInfo.generalInfo.growthPeriod}</Badge>
                 </div>
               )}
             </div>
-          </div>
-          {/* Selected Crop Display */}
-          {selectedCrop && (
-            <div className="text-center mt-4">
-              <Badge variant="default" className="text-base px-4 py-2">
-                {language === 'hi' ? "चयनित फसल: " : "Selected: "}
-                {crops.find(c => c.id === selectedCrop)?.name || selectedCrop}
-              </Badge>
-            </div>
           )}
+          
           {/* Prompt to search when no crop selected */}
           {!selectedCrop && !searchQuery && (
             <div className="text-center mt-4 text-muted-foreground">
-              {language === 'hi' ? "कृपया ऊपर सर्च बॉक्स में फसल का नाम लिखें" : "Please type a crop name in the search box above"}
+              {language === 'hi' ? "कृपया ऊपर सर्च बॉक्स में कोई भी फसल, फल या सब्जी का नाम लिखें और 'AI से जानकारी लें' बटन दबाएं" : "Please type any crop, fruit or vegetable name in the search box above and click 'Get AI Info' button"}
             </div>
           )}
         </div>
@@ -1530,18 +1584,18 @@ const FarmingTools = () => {
 
           {/* Mandi Prices Tab */}
           <TabsContent value="mandi">
-            {selectedCrop ? (
+            {selectedCrop && aiCropInfo ? (
               <>
                 <div className="mb-4 p-4 bg-muted/50 rounded-lg flex items-center gap-2">
                   <Info className="w-5 h-5 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
                     {language === 'hi' 
-                      ? "नोट: ये भाव संकेतक हैं और वास्तविक मंडी दरों से भिन्न हो सकते हैं। कृपया बेचने से पहले अपनी स्थानीय मंडी से संपर्क करें।" 
-                      : "Note: These prices are indicative and may vary from actual mandi rates. Please contact your local mandi before selling."}
+                      ? "नोट: ये भाव AI द्वारा अनुमानित हैं। कृपया बेचने से पहले अपनी स्थानीय मंडी से संपर्क करें।" 
+                      : "Note: These prices are AI-estimated. Please contact your local mandi before selling."}
                   </p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
-                  {(mandiPrices[selectedCrop] || []).map((price, index) => (
+                  {(aiCropInfo.mandiPrices || []).map((price, index) => (
                     <Card key={index} className="border-l-4 border-l-primary">
                       <CardHeader className="pb-2">
                         <CardTitle className="flex items-center justify-between">
@@ -1562,17 +1616,17 @@ const FarmingTools = () => {
                       </CardHeader>
                       <CardContent>
                         <div className="flex items-end gap-2">
-                          <span className="text-3xl font-bold text-primary">₹{price.price.toLocaleString()}</span>
+                          <span className="text-3xl font-bold text-primary">₹{(price.price || 0).toLocaleString()}</span>
                           <span className="text-muted-foreground mb-1">/ {language === 'hi' ? "क्विंटल" : "quintal"}</span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-2">
-                          {language === 'hi' ? "आज का भाव" : "Today's rate"} • {new Date().toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-IN')}
+                          {language === 'hi' ? "AI अनुमानित भाव" : "AI estimated rate"} • {new Date().toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-IN')}
                         </p>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
-                {(!mandiPrices[selectedCrop] || mandiPrices[selectedCrop].length === 0) && (
+                {(!aiCropInfo.mandiPrices || aiCropInfo.mandiPrices.length === 0) && (
                   <div className="text-center py-12 text-muted-foreground">
                     <IndianRupee className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>{language === 'hi' ? "इस फसल के लिए मंडी भाव उपलब्ध नहीं है" : "Mandi prices not available for this crop"}</p>
@@ -1582,16 +1636,16 @@ const FarmingTools = () => {
             ) : (
               <div className="text-center py-16 text-muted-foreground">
                 <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
+                <p className="text-lg">{language === 'hi' ? "कृपया ऊपर फसल का नाम लिखें और 'AI से जानकारी लें' बटन दबाएं" : "Please type a crop name above and click 'Get AI Info' button"}</p>
               </div>
             )}
           </TabsContent>
 
           {/* Pesticides Tab */}
           <TabsContent value="pesticides">
-            {selectedCrop ? (
+            {selectedCrop && aiCropInfo ? (
               <div className="grid md:grid-cols-2 gap-6">
-                {(pesticides[selectedCrop] || []).map((pesticide, index) => (
+                {(aiCropInfo.pesticides || []).map((pesticide, index) => (
                   <Card key={index} className="border-l-4 border-l-orange-500">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -1616,7 +1670,7 @@ const FarmingTools = () => {
                     </CardContent>
                   </Card>
                 ))}
-                {(!pesticides[selectedCrop] || pesticides[selectedCrop].length === 0) && (
+                {(!aiCropInfo.pesticides || aiCropInfo.pesticides.length === 0) && (
                   <div className="col-span-2 text-center py-12 text-muted-foreground">
                     <Bug className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>{language === 'hi' ? "इस फसल के लिए कीटनाशक जानकारी उपलब्ध नहीं है" : "Pesticide info not available for this crop"}</p>
@@ -1626,16 +1680,16 @@ const FarmingTools = () => {
             ) : (
               <div className="text-center py-16 text-muted-foreground">
                 <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
+                <p className="text-lg">{language === 'hi' ? "कृपया ऊपर फसल का नाम लिखें और 'AI से जानकारी लें' बटन दबाएं" : "Please type a crop name above and click 'Get AI Info' button"}</p>
               </div>
             )}
           </TabsContent>
 
           {/* Fertilizers Tab */}
           <TabsContent value="fertilizers">
-            {selectedCrop ? (
+            {selectedCrop && aiCropInfo ? (
               <div className="grid md:grid-cols-2 gap-6">
-                {(fertilizers[selectedCrop] || []).map((fertilizer, index) => (
+                {(aiCropInfo.fertilizers || []).map((fertilizer, index) => (
                   <Card key={index} className="border-l-4 border-l-green-500">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -1656,7 +1710,7 @@ const FarmingTools = () => {
                     </CardContent>
                   </Card>
                 ))}
-                {(!fertilizers[selectedCrop] || fertilizers[selectedCrop].length === 0) && (
+                {(!aiCropInfo.fertilizers || aiCropInfo.fertilizers.length === 0) && (
                   <div className="col-span-2 text-center py-12 text-muted-foreground">
                     <Leaf className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>{language === 'hi' ? "इस फसल के लिए खाद जानकारी उपलब्ध नहीं है" : "Fertilizer info not available for this crop"}</p>
@@ -1666,16 +1720,16 @@ const FarmingTools = () => {
             ) : (
               <div className="text-center py-16 text-muted-foreground">
                 <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
+                <p className="text-lg">{language === 'hi' ? "कृपया ऊपर फसल का नाम लिखें और 'AI से जानकारी लें' बटन दबाएं" : "Please type a crop name above and click 'Get AI Info' button"}</p>
               </div>
             )}
           </TabsContent>
 
           {/* Diseases Tab */}
           <TabsContent value="diseases">
-            {selectedCrop ? (
+            {selectedCrop && aiCropInfo ? (
               <div className="grid md:grid-cols-2 gap-6">
-                {(diseases[selectedCrop] || []).map((disease, index) => (
+                {(aiCropInfo.diseases || []).map((disease, index) => (
                   <Card key={index} className="border-l-4 border-l-red-500">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -1699,7 +1753,7 @@ const FarmingTools = () => {
                     </CardContent>
                   </Card>
                 ))}
-                {(!diseases[selectedCrop] || diseases[selectedCrop].length === 0) && (
+                {(!aiCropInfo.diseases || aiCropInfo.diseases.length === 0) && (
                   <div className="col-span-2 text-center py-12 text-muted-foreground">
                     <Thermometer className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>{language === 'hi' ? "इस फसल के लिए रोग जानकारी उपलब्ध नहीं है" : "Disease info not available for this crop"}</p>
@@ -1709,7 +1763,7 @@ const FarmingTools = () => {
             ) : (
               <div className="text-center py-16 text-muted-foreground">
                 <Search className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                <p className="text-lg">{language === 'hi' ? "कृपया पहले ऊपर सर्च बॉक्स में फसल का पूरा नाम लिखकर चुनें" : "Please search and select a crop from the search box above"}</p>
+                <p className="text-lg">{language === 'hi' ? "कृपया ऊपर फसल का नाम लिखें और 'AI से जानकारी लें' बटन दबाएं" : "Please type a crop name above and click 'Get AI Info' button"}</p>
               </div>
             )}
           </TabsContent>
