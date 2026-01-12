@@ -1,6 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useRef } from "react";
+import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CropForm, { FormData } from "@/components/CropForm";
 import RecommendationResults from "@/components/RecommendationResults";
@@ -8,34 +7,14 @@ import ImageUpload from "@/components/ImageUpload";
 import FarmingTools from "@/components/FarmingTools";
 import { CropRecommendation } from "@/components/CropCard";
 import { generateRecommendations } from "@/lib/cropRecommendation";
-import { Sprout, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { User } from "@supabase/supabase-js";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { Sprout } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
-  const navigate = useNavigate();
   const { t } = useLanguage();
-  const [user, setUser] = useState<User | null>(null);
   const [recommendations, setRecommendations] = useState<CropRecommendation[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -54,44 +33,10 @@ const Index = () => {
     scrollToForm();
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast.success("Logged out successfully");
-  };
-
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-hero flex items-center justify-center">
-              <Sprout className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold">{t('appName')}</span>
-          </div>
-          <nav className="flex items-center gap-2">
-            <LanguageSwitcher />
-            {user ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleLogout}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                {t('logout')}
-              </Button>
-            ) : (
-              <Link to="/auth">
-                <Button variant="default" size="sm">
-                  {t('login')}
-                </Button>
-              </Link>
-            )}
-          </nav>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <HeroSection onGetStarted={scrollToForm} />

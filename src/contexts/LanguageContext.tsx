@@ -212,6 +212,12 @@ const translations: Record<Language, Record<string, string>> = {
     // Footer
     footerText: "Empowering farmers with AI-driven insights",
     allRights: "All rights reserved",
+    
+    // Navigation
+    home: "Home",
+    cropCalendar: "Crop Calendar",
+    govSchemes: "Government Schemes",
+    myFarm: "My Farm",
   },
   hi: {
     // Header
