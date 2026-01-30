@@ -1483,8 +1483,24 @@ const CropCalendar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
 
+  // Main crops to show by default (popular crops)
+  const mainCropNames = [
+    "Rice (Paddy)", "Cotton", "Moong (Green Gram)", "Urad (Black Gram)", 
+    "Maize (Corn)", "Soybean", "Groundnut (Peanut)", "Wheat", "Mustard", 
+    "Chana (Chickpea)", "Masoor (Lentil)", "Barley", "Potato", "Onion", 
+    "Tomato", "Brinjal (Eggplant)", "Cabbage", "Cauliflower", "Carrot", 
+    "Radish", "Peas", "Capsicum (Bell Pepper)", "Green Chilli", 
+    "Bottle Gourd (Lauki)", "Bitter Gourd (Karela)", "Cucumber (Kheera)", 
+    "Spinach (Palak)", "Coriander (Dhaniya)", "Garlic", "Ginger", 
+    "Turmeric (Haldi)", "Sugarcane", "Sunflower", "Sesame (Til)"
+  ];
+
+  const mainCrops = useMemo(() => {
+    return cropsCalendarData.filter(crop => mainCropNames.includes(crop.name));
+  }, []);
+
   const filteredCrops = useMemo(() => {
-    if (!searchQuery.trim()) return cropsCalendarData;
+    if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
     return cropsCalendarData.filter(
       (crop) =>
@@ -1556,22 +1572,50 @@ const CropCalendar = () => {
             </div>
           </div>
 
-          {/* Crop Pills */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {filteredCrops.map((crop) => (
-              <Button
-                key={crop.name}
-                variant={selectedCrop === crop.name ? "default" : "outline"}
-                size="sm"
-                className="rounded-full"
-                onClick={() => setSelectedCrop(crop.name)}
-              >
-                {isHindi ? crop.nameHi : crop.name}
-              </Button>
-            ))}
-          </div>
+          {/* Main Crops Tags - Show when not searching */}
+          {!searchQuery && (
+            <div className="bg-muted/30 rounded-xl p-6 mb-8">
+              <div className="flex flex-wrap justify-center gap-3">
+                {mainCrops.map((crop) => (
+                  <Button
+                    key={crop.name}
+                    variant={selectedCrop === crop.name ? "default" : "outline"}
+                    size="sm"
+                    className="rounded-full border-primary/50 hover:bg-primary/10"
+                    onClick={() => setSelectedCrop(crop.name)}
+                  >
+                    {isHindi ? crop.nameHi : crop.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
 
-          {filteredCrops.length === 0 && (
+          {/* Search Results - Show when searching */}
+          {searchQuery && (
+            <div className="bg-muted/30 rounded-xl p-6 mb-8">
+              <p className="text-sm text-muted-foreground text-center mb-4">
+                {isHindi 
+                  ? `${filteredCrops.length} फसलें मिलीं` 
+                  : `${filteredCrops.length} crops found`}
+              </p>
+              <div className="flex flex-wrap justify-center gap-3">
+                {filteredCrops.map((crop) => (
+                  <Button
+                    key={crop.name}
+                    variant={selectedCrop === crop.name ? "default" : "outline"}
+                    size="sm"
+                    className="rounded-full border-primary/50 hover:bg-primary/10"
+                    onClick={() => setSelectedCrop(crop.name)}
+                  >
+                    {isHindi ? crop.nameHi : crop.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {filteredCrops.length === 0 && searchQuery && (
             <div className="text-center py-12">
               <p className="text-muted-foreground text-lg">
                 {isHindi
@@ -1638,40 +1682,6 @@ const CropCalendar = () => {
                   </Card>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Show all crops grid if no crop selected */}
-          {!currentCrop && filteredCrops.length > 0 && (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredCrops.map((crop) => (
-                <Card
-                  key={crop.name}
-                  className="cursor-pointer hover:border-primary/50 transition-colors"
-                  onClick={() => setSelectedCrop(crop.name)}
-                >
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">
-                      {isHindi ? crop.nameHi : crop.name}
-                    </CardTitle>
-                    <div className="flex gap-2 mt-2">
-                      <Badge variant="outline" className="bg-primary/10 text-xs">
-                        {isHindi ? crop.seasonHi : crop.season}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {isHindi ? crop.durationHi : crop.duration}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      {isHindi
-                        ? `${crop.calendar.length} महीने की गतिविधियां`
-                        : `${crop.calendar.length} months of activities`}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           )}
         </div>
