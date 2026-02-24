@@ -1519,6 +1519,28 @@ const CropCalendar = () => {
     }
   }, [language, isHindi]);
 
+  // Auto-search with AI when no local results found
+  const [lastAISearch, setLastAISearch] = useState("");
+  
+  const debouncedSearch = useMemo(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    return (query: string) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (query.trim().length >= 2) {
+          setLastAISearch(query);
+          searchAICrop(query);
+        }
+      }, 800);
+    };
+  }, [searchAICrop]);
+
+  // Trigger AI search when local results are empty
+  useMemo(() => {
+    if (searchQuery.trim().length >= 2 && filteredCrops.length === 0 && lastAISearch !== searchQuery && !isLoadingAI) {
+      debouncedSearch(searchQuery);
+    }
+  }, [searchQuery, filteredCrops.length, lastAISearch, isLoadingAI, debouncedSearch]);
   const currentCrop = selectedCrop === "__ai__"
     ? aiCrop
     : selectedCrop
@@ -1563,6 +1585,8 @@ const CropCalendar = () => {
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setSelectedCrop(null);
+                  setAiCrop(null);
+                  setLastAISearch("");
                 }}
                 className="pl-10 pr-10"
               />
@@ -1606,22 +1630,6 @@ const CropCalendar = () => {
             </div>
           )}
 
-          {filteredCrops.length === 0 && searchQuery && !isLoadingAI && !aiCrop && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg mb-4">
-                {isHindi
-                  ? "हमारी सूची में नहीं मिला। AI से खोजें?"
-                  : "Not in our list. Search with AI?"}
-              </p>
-              <Button 
-                onClick={() => searchAICrop(searchQuery)}
-                className="gap-2"
-              >
-                <Search className="w-4 h-4" />
-                {isHindi ? `"${searchQuery}" की जानकारी AI से लाएं` : `Get "${searchQuery}" info from AI`}
-              </Button>
-            </div>
-          )}
 
           {isLoadingAI && (
             <div className="text-center py-12">
