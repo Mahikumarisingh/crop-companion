@@ -1,11 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Header from "@/components/Header";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Calendar, Droplets, Scissors, Sprout, Bug, FlaskConical, Search, X } from "lucide-react";
+import { Calendar, Droplets, Scissors, Sprout, Bug, FlaskConical, Search, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface CropActivity {
   month: string;
@@ -1482,22 +1484,8 @@ const CropCalendar = () => {
   const isHindi = language === 'hi';
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
-
-  // Main crops to show by default (popular crops)
-  const mainCropNames = [
-    "Rice (Paddy)", "Cotton", "Moong (Green Gram)", "Urad (Black Gram)", 
-    "Maize (Corn)", "Soybean", "Groundnut (Peanut)", "Wheat", "Mustard", 
-    "Chana (Chickpea)", "Masoor (Lentil)", "Barley", "Potato", "Onion", 
-    "Tomato", "Brinjal (Eggplant)", "Cabbage", "Cauliflower", "Carrot", 
-    "Radish", "Peas", "Capsicum (Bell Pepper)", "Green Chilli", 
-    "Bottle Gourd (Lauki)", "Bitter Gourd (Karela)", "Cucumber (Kheera)", 
-    "Spinach (Palak)", "Coriander (Dhaniya)", "Garlic", "Ginger", 
-    "Turmeric (Haldi)", "Sugarcane", "Sunflower", "Sesame (Til)"
-  ];
-
-  const mainCrops = useMemo(() => {
-    return cropsCalendarData.filter(crop => mainCropNames.includes(crop.name));
-  }, []);
+  const [aiCrop, setAiCrop] = useState<CropCalendarData | null>(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
 
   const filteredCrops = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -1511,9 +1499,31 @@ const CropCalendar = () => {
     );
   }, [searchQuery]);
 
-  const currentCrop = selectedCrop
-    ? cropsCalendarData.find((c) => c.name === selectedCrop)
-    : null;
+  const searchAICrop = useCallback(async (cropName: string) => {
+    setIsLoadingAI(true);
+    setAiCrop(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-crop-calendar", {
+        body: { cropName, language },
+      });
+      if (error) throw error;
+      if (data?.cropCalendar) {
+        setAiCrop(data.cropCalendar);
+        setSelectedCrop("__ai__");
+      }
+    } catch (err) {
+      console.error("AI crop calendar error:", err);
+      toast.error(isHindi ? "फसल की जानकारी नहीं मिल सकी" : "Could not fetch crop information");
+    } finally {
+      setIsLoadingAI(false);
+    }
+  }, [language, isHindi]);
+
+  const currentCrop = selectedCrop === "__ai__"
+    ? aiCrop
+    : selectedCrop
+      ? cropsCalendarData.find((c) => c.name === selectedCrop)
+      : null;
 
   return (
     <main className="min-h-screen bg-background">
@@ -1596,12 +1606,30 @@ const CropCalendar = () => {
             </div>
           )}
 
-          {filteredCrops.length === 0 && searchQuery && (
+          {filteredCrops.length === 0 && searchQuery && !isLoadingAI && !aiCrop && (
             <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg mb-4">
+                {isHindi
+                  ? "हमारी सूची में नहीं मिला। AI से खोजें?"
+                  : "Not in our list. Search with AI?"}
+              </p>
+              <Button 
+                onClick={() => searchAICrop(searchQuery)}
+                className="gap-2"
+              >
+                <Search className="w-4 h-4" />
+                {isHindi ? `"${searchQuery}" की जानकारी AI से लाएं` : `Get "${searchQuery}" info from AI`}
+              </Button>
+            </div>
+          )}
+
+          {isLoadingAI && (
+            <div className="text-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground text-lg">
                 {isHindi
-                  ? "कोई फसल नहीं मिली। कृपया दूसरा नाम खोजें।"
-                  : "No crops found. Please try a different search."}
+                  ? `"${searchQuery}" की जानकारी AI से ला रहे हैं...`
+                  : `Fetching "${searchQuery}" calendar with AI...`}
               </p>
             </div>
           )}
