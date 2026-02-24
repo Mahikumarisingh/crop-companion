@@ -1572,25 +1572,6 @@ const CropCalendar = () => {
             </div>
           </div>
 
-          {/* Main Crops Tags - Show when not searching */}
-          {!searchQuery && (
-            <div className="bg-muted/30 rounded-xl p-6 mb-8">
-              <div className="flex flex-wrap justify-center gap-3">
-                {mainCrops.map((crop) => (
-                  <Button
-                    key={crop.name}
-                    variant={selectedCrop === crop.name ? "default" : "outline"}
-                    size="sm"
-                    className="rounded-full border-primary/50 hover:bg-primary/10"
-                    onClick={() => setSelectedCrop(crop.name)}
-                  >
-                    {isHindi ? crop.nameHi : crop.name}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Search Results - Show when searching */}
           {searchQuery && (
             <div className="bg-muted/30 rounded-xl p-6 mb-8">
