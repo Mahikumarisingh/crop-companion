@@ -88,23 +88,57 @@ IMPORTANT:
       });
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-
-    let cropCalendar;
-    try {
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        cropCalendar = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error("No JSON found");
-      }
-    } catch (parseError) {
-      console.error("JSON parse error:", parseError);
-      return new Response(JSON.stringify({ error: "Failed to parse response" }), {
+    const contentType = response.headers.get("content-type");
+    if (!contentType?.includes("application/json")) {
+      const textResp = await response.text();
+      console.error("Non-JSON response:", contentType, textResp.substring(0, 300));
+      return new Response(JSON.stringify({ error: "AI returned non-JSON response" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    
+    if (!content) {
+      console.error("Empty AI content. Full response:", JSON.stringify(data).substring(0, 500));
+      return new Response(JSON.stringify({ error: "Empty AI response" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    let cropCalendar;
+    try {
+      // Try direct parse first
+      cropCalendar = JSON.parse(content);
+    } catch {
+      try {
+        // Try extracting JSON from markdown code blocks
+        const codeBlockMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (codeBlockMatch) {
+          cropCalendar = JSON.parse(codeBlockMatch[1].trim());
+        } else {
+          // Try finding JSON object
+          const jsonMatch = content.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            cropCalendar = JSON.parse(jsonMatch[0]);
+          } else {
+            console.error("No JSON found in content:", content.substring(0, 500));
+            return new Response(JSON.stringify({ error: "Failed to parse response" }), {
+              status: 500,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+        }
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError, "Content:", content.substring(0, 500));
+        return new Response(JSON.stringify({ error: "Failed to parse response" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     return new Response(JSON.stringify({ cropCalendar }), {
