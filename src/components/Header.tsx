@@ -1,19 +1,52 @@
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Sprout, LogOut, Menu, X, Home, Calendar, Landmark, LayoutDashboard } from "lucide-react";
+import { Sprout, LogOut, Menu, X, Home, Calendar, Landmark, LayoutDashboard, MapPin, ChevronDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 const Header = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [detectedLocation, setDetectedLocation] = useState<string>("");
+  const [isLocating, setIsLocating] = useState(false);
+
+  const isHindi = language === "hi";
+
+  const detectLocation = useCallback(() => {
+    if (!navigator.geolocation || detectedLocation) return;
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`,
+            { headers: { 'User-Agent': 'CropWise AI App' } }
+          );
+          const data = await res.json();
+          if (data.address) {
+            const city = data.address.city || data.address.town || data.address.village || data.address.state_district || "";
+            const state = data.address.state || "";
+            setDetectedLocation(city ? `${city}, ${state}` : state);
+          }
+        } catch { /* silently fail */ }
+        setIsLocating(false);
+      },
+      () => setIsLocating(false),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    );
+  }, [detectedLocation]);
+
+  useEffect(() => {
+    detectLocation();
+  }, [detectLocation]);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -46,12 +79,30 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
           <div className="w-10 h-10 rounded-xl bg-gradient-hero flex items-center justify-center">
             <Sprout className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold">{t('appName')}</span>
+          <span className="text-xl font-bold hidden sm:inline">{t('appName')}</span>
         </Link>
+
+        {/* Zomato/Swiggy style location */}
+        <button
+          onClick={() => {
+            if (!detectedLocation) detectLocation();
+          }}
+          className="flex items-center gap-1.5 ml-2 md:ml-4 px-2 py-1.5 rounded-lg hover:bg-muted transition-colors max-w-[180px] md:max-w-[240px] group"
+        >
+          <MapPin className="w-4 h-4 text-primary shrink-0" />
+          {isLocating ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
+          ) : detectedLocation ? (
+            <span className="text-sm font-medium truncate text-foreground">{detectedLocation}</span>
+          ) : (
+            <span className="text-sm text-muted-foreground">{isHindi ? "स्थान पता करें" : "Detect location"}</span>
+          )}
+          <ChevronDown className="w-3 h-3 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
+        </button>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
