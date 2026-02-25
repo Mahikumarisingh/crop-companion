@@ -1610,9 +1610,14 @@ const CropCalendar = () => {
           {searchQuery && (
             <div className="bg-muted/30 rounded-xl p-6 mb-8">
               <p className="text-sm text-muted-foreground text-center mb-4">
-                {isHindi 
-                  ? `${filteredCrops.length} फसलें मिलीं` 
-                  : `${filteredCrops.length} crops found`}
+                {isLoadingAI
+                  ? (isHindi ? "खोज रहे हैं..." : "Searching...")
+                  : (() => {
+                      const totalResults = filteredCrops.length + (aiCrop ? 1 : 0);
+                      return isHindi
+                        ? `${totalResults} फसलें मिलीं`
+                        : `${totalResults} crops found`;
+                    })()}
               </p>
               <div className="flex flex-wrap justify-center gap-3">
                 {filteredCrops.map((crop) => (
@@ -1626,6 +1631,17 @@ const CropCalendar = () => {
                     {isHindi ? crop.nameHi : crop.name}
                   </Button>
                 ))}
+
+                {aiCrop && (
+                  <Button
+                    variant={selectedCrop === "__ai__" ? "default" : "outline"}
+                    size="sm"
+                    className="rounded-full border-primary/50 hover:bg-primary/10"
+                    onClick={() => setSelectedCrop("__ai__")}
+                  >
+                    {isHindi ? aiCrop.nameHi : aiCrop.name}
+                  </Button>
+                )}
               </div>
             </div>
           )}
