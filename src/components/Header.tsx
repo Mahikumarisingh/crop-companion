@@ -15,7 +15,9 @@ const Header = () => {
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [detectedLocation, setDetectedLocation] = useState<string>("");
+  const [fullAddress, setFullAddress] = useState<string>("");
   const [isLocating, setIsLocating] = useState(false);
+  const [showAddressPopup, setShowAddressPopup] = useState(false);
 
   const isHindi = language === "hi";
 
@@ -27,14 +29,19 @@ const Header = () => {
         try {
           const { latitude, longitude } = position.coords;
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`,
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
             { headers: { 'User-Agent': 'CropWise AI App' } }
           );
           const data = await res.json();
           if (data.address) {
-            const city = data.address.city || data.address.town || data.address.village || data.address.state_district || "";
+            const area = data.address.suburb || data.address.neighbourhood || data.address.village || data.address.town || "";
+            const city = data.address.city || data.address.state_district || "";
             const state = data.address.state || "";
-            setDetectedLocation(city ? `${city}, ${state}` : state);
+            const pin = data.address.postcode || "";
+            const shortLabel = area || city || state;
+            const fullAddr = [area, city, state, pin ? `${pin}` : "", "India"].filter(Boolean).join(", ");
+            setDetectedLocation(shortLabel);
+            setFullAddress(fullAddr);
           }
         } catch { /* silently fail */ }
         setIsLocating(false);
@@ -87,22 +94,37 @@ const Header = () => {
         </Link>
 
         {/* Zomato/Swiggy style location */}
-        <button
-          onClick={() => {
-            if (!detectedLocation) detectLocation();
-          }}
-          className="flex items-center gap-1.5 ml-2 md:ml-4 px-2 py-1.5 rounded-lg hover:bg-muted transition-colors max-w-[180px] md:max-w-[240px] group"
-        >
-          <MapPin className="w-4 h-4 text-primary shrink-0" />
-          {isLocating ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
-          ) : detectedLocation ? (
-            <span className="text-sm font-medium truncate text-foreground">{detectedLocation}</span>
-          ) : (
-            <span className="text-sm text-muted-foreground">{isHindi ? "स्थान पता करें" : "Detect location"}</span>
+        <div className="relative">
+          <button
+            onClick={() => {
+              if (!detectedLocation) detectLocation();
+              else setShowAddressPopup(!showAddressPopup);
+            }}
+            className="flex items-center gap-1.5 ml-2 md:ml-4 px-2 py-1.5 rounded-lg hover:bg-muted transition-colors max-w-[180px] md:max-w-[240px] group"
+          >
+            <MapPin className="w-4 h-4 text-primary shrink-0" />
+            {isLocating ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-muted-foreground" />
+            ) : detectedLocation ? (
+              <span className="text-sm font-medium truncate text-foreground">{detectedLocation}</span>
+            ) : (
+              <span className="text-sm text-muted-foreground">{isHindi ? "स्थान पता करें" : "Detect location"}</span>
+            )}
+            <ChevronDown className={cn("w-3 h-3 text-muted-foreground shrink-0 transition-transform", showAddressPopup && "rotate-180")} />
+          </button>
+
+          {showAddressPopup && fullAddress && (
+            <div className="absolute top-full left-0 mt-1 w-72 md:w-80 bg-card border border-border rounded-xl shadow-lg p-4 z-50 animate-fade-up">
+              <div className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                <div className="min-w-0">
+                  <p className="font-semibold text-foreground text-sm">{detectedLocation}</p>
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{fullAddress}</p>
+                </div>
+              </div>
+            </div>
           )}
-          <ChevronDown className="w-3 h-3 text-muted-foreground shrink-0 group-hover:text-foreground transition-colors" />
-        </button>
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1">
