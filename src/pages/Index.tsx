@@ -5,10 +5,12 @@ import CropForm, { FormData } from "@/components/CropForm";
 import RecommendationResults from "@/components/RecommendationResults";
 import ImageUpload from "@/components/ImageUpload";
 import FarmingTools from "@/components/FarmingTools";
+import VoiceInput from "@/components/VoiceInput";
 import { CropRecommendation } from "@/components/CropCard";
 import { generateRecommendations } from "@/lib/cropRecommendation";
 import { Sprout } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
 
 const Index = () => {
   const { t } = useLanguage();
@@ -33,10 +35,17 @@ const Index = () => {
     scrollToForm();
   };
 
+  const handleVoiceResult = (text: string) => {
+    toast.info(`🎤 "${text}"`, { duration: 4000 });
+  };
+
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
       <Header />
+
+      {/* Voice Input */}
+      <VoiceInput onResult={handleVoiceResult} />
 
       {/* Hero Section */}
       <HeroSection onGetStarted={scrollToForm} />
