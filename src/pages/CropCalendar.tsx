@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Calendar, Droplets, Scissors, Sprout, Bug, FlaskConical, Search, X, Loader2 } from "lucide-react";
+import { Calendar, Droplets, Scissors, Sprout, Bug, FlaskConical, Search, X, Loader2, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -1572,37 +1572,72 @@ const CropCalendar = () => {
             </p>
 
             {/* Search Box */}
-            <div className="max-w-md mx-auto relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder={
-                  isHindi
-                    ? "फसल खोजें... (जैसे: टमाटर, आलू, चना)"
-                    : "Search crops... (e.g. Tomato, Potato, Chana)"
-                }
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setSelectedCrop(null);
-                  setAiCrop(null);
-                  setLastAISearch("");
-                }}
-                className="pl-10 pr-10"
-              />
-              {searchQuery && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
-                  onClick={() => {
-                    setSearchQuery("");
+            <div className="max-w-md mx-auto flex gap-2 items-center">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder={
+                    isHindi
+                      ? "फसल खोजें... (जैसे: टमाटर, आलू, चना)"
+                      : "Search crops... (e.g. Tomato, Potato, Chana)"
+                  }
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
                     setSelectedCrop(null);
+                    setAiCrop(null);
+                    setLastAISearch("");
                   }}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              )}
+                  className="pl-10 pr-10"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedCrop(null);
+                    }}
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                className="shrink-0 h-10 w-10 rounded-full border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all"
+                onClick={() => {
+                  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                  if (!SpeechRecognition) {
+                    toast.error(isHindi ? "आपका ब्राउज़र वॉइस सपोर्ट नहीं करता" : "Your browser doesn't support voice input");
+                    return;
+                  }
+                  const recognition = new SpeechRecognition();
+                  const langMap: Record<string, string> = { en: "en-IN", hi: "hi-IN", pa: "pa-IN", mr: "mr-IN", ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN" };
+                  recognition.lang = langMap[language] || "en-IN";
+                  recognition.interimResults = false;
+                  recognition.onresult = (event: any) => {
+                    const text = event.results[0][0].transcript;
+                    setSearchQuery(text);
+                    setSelectedCrop(null);
+                    setAiCrop(null);
+                    setLastAISearch("");
+                  };
+                  recognition.onerror = (event: any) => {
+                    if (event.error === "not-allowed") {
+                      toast.error(isHindi ? "माइक्रोफ़ोन की अनुमति दें" : "Please allow microphone access");
+                    }
+                  };
+                  recognition.start();
+                  toast.info(isHindi ? "🎤 बोलिए..." : "🎤 Speak now...");
+                }}
+                aria-label="Voice search"
+              >
+                <Mic className="w-5 h-5" />
+              </Button>
             </div>
           </div>
 
