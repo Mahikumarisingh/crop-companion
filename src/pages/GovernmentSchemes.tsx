@@ -1,5 +1,7 @@
 import Header from "@/components/Header";
+import VoiceInput from "@/components/VoiceInput";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
