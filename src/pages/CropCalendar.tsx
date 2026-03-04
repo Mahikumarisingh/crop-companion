@@ -4,7 +4,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Calendar, Droplets, Scissors, Sprout, Bug, FlaskConical, Search, X, Loader2, Mic } from "lucide-react";
+import { Calendar, Droplets, Scissors, Sprout, Bug, FlaskConical, Search, X, Loader2 } from "lucide-react";
+import VoiceInput from "@/components/VoiceInput";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -1550,6 +1551,12 @@ const CropCalendar = () => {
   return (
     <main className="min-h-screen bg-background">
       <Header />
+      <VoiceInput onResult={(text) => {
+        setSearchQuery(text);
+        setSelectedCrop(null);
+        setAiCrop(null);
+        setLastAISearch("");
+      }} />
 
       <div className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-6xl">
@@ -1605,39 +1612,7 @@ const CropCalendar = () => {
                   </Button>
                 )}
               </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0 h-10 w-10 rounded-full border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all"
-                onClick={() => {
-                  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-                  if (!SpeechRecognition) {
-                    toast.error(isHindi ? "आपका ब्राउज़र वॉइस सपोर्ट नहीं करता" : "Your browser doesn't support voice input");
-                    return;
-                  }
-                  const recognition = new SpeechRecognition();
-                  const langMap: Record<string, string> = { en: "en-IN", hi: "hi-IN", pa: "pa-IN", mr: "mr-IN", ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN" };
-                  recognition.lang = langMap[language] || "en-IN";
-                  recognition.interimResults = false;
-                  recognition.onresult = (event: any) => {
-                    const text = event.results[0][0].transcript;
-                    setSearchQuery(text);
-                    setSelectedCrop(null);
-                    setAiCrop(null);
-                    setLastAISearch("");
-                  };
-                  recognition.onerror = (event: any) => {
-                    if (event.error === "not-allowed") {
-                      toast.error(isHindi ? "माइक्रोफ़ोन की अनुमति दें" : "Please allow microphone access");
-                    }
-                  };
-                  recognition.start();
-                  toast.info(isHindi ? "🎤 बोलिए..." : "🎤 Speak now...");
-                }}
-                aria-label="Voice search"
-              >
-                <Mic className="w-5 h-5" />
-              </Button>
+              
             </div>
           </div>
 

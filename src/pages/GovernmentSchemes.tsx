@@ -1,5 +1,7 @@
 import Header from "@/components/Header";
+import VoiceInput from "@/components/VoiceInput";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -190,6 +192,7 @@ const GovernmentSchemes = () => {
   return (
     <main className="min-h-screen bg-background">
       <Header />
+      <VoiceInput onResult={(text) => toast.info(`🎤 "${text}"`, { duration: 4000 })} />
       
       <div className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-6xl">

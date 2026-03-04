@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
+import VoiceInput from "@/components/VoiceInput";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -180,6 +181,7 @@ const Dashboard = () => {
   return (
     <main className="min-h-screen bg-background">
       <Header />
+      <VoiceInput onResult={(text) => toast.info(`🎤 "${text}"`, { duration: 4000 })} />
       
       <div className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-6xl">
