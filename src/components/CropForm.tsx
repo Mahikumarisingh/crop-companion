@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Loader2, Sparkles, MapPin, Navigation } from "lucide-react";
+import { Loader2, Sparkles, MapPin, Navigation, Mic, MicOff } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils";
 import { indiaLocationData, getClimateForDistrict } from "@/data/indiaLocations";
 import { toast } from "sonner";
 import SoilTypeHelper from "./SoilTypeHelper";
@@ -24,10 +25,11 @@ export interface FormData {
 }
 
 const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [isLocating, setIsLocating] = useState(false);
+  const [isVoiceListening, setIsVoiceListening] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     soilType: "",
     climate: "",
@@ -198,10 +200,62 @@ const CropForm = ({ onSubmit, isLoading }: CropFormProps) => {
 
   const isFormValid = formData.soilType && formData.climate && formData.waterAvailability && formData.season;
 
+  const handleVoiceForForm = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error(language === "hi" ? "आपका ब्राउज़र वॉइस सपोर्ट नहीं करता" : "Voice not supported in your browser");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    const langMap: Record<string, string> = { en: "en-IN", hi: "hi-IN", pa: "pa-IN", mr: "mr-IN", ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN" };
+    recognition.lang = langMap[language] || "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onresult = (event: any) => {
+      const text = event.results[0][0].transcript.toLowerCase();
+      toast.info(`🎤 "${text}"`, { duration: 3000 });
+      // Auto-detect soil type
+      const soilMap: Record<string, string> = { clay: "clay", "चिकनी": "clay", sandy: "sandy", "बलुई": "sandy", loamy: "loamy", "दोमट": "loamy", silt: "silt", "गाद": "silt", peat: "peaty", "पीट": "peaty", chalky: "chalky" };
+      for (const [key, val] of Object.entries(soilMap)) {
+        if (text.includes(key)) { setFormData(prev => ({ ...prev, soilType: val })); break; }
+      }
+      // Auto-detect season
+      const seasonMap: Record<string, string> = { kharif: "kharif", "खरीफ": "kharif", rabi: "rabi", "रबी": "rabi", zaid: "zaid", "जायद": "zaid" };
+      for (const [key, val] of Object.entries(seasonMap)) {
+        if (text.includes(key)) { setFormData(prev => ({ ...prev, season: val })); break; }
+      }
+      // Auto-detect water
+      const waterMap: Record<string, string> = { abundant: "abundant", "प्रचुर": "abundant", moderate: "moderate", "मध्यम": "moderate", limited: "limited", "सीमित": "limited", rainfed: "rainfed", "वर्षा": "rainfed" };
+      for (const [key, val] of Object.entries(waterMap)) {
+        if (text.includes(key)) { setFormData(prev => ({ ...prev, waterAvailability: val })); break; }
+      }
+      setIsVoiceListening(false);
+    };
+    recognition.onerror = () => setIsVoiceListening(false);
+    recognition.onend = () => setIsVoiceListening(false);
+    recognition.start();
+    setIsVoiceListening(true);
+  };
+
   return (
     <Card variant="elevated" className="max-w-2xl mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl md:text-3xl">{t('formTitle')}</CardTitle>
+        <div className="flex items-center justify-center gap-3">
+          <CardTitle className="text-2xl md:text-3xl">{t('formTitle')}</CardTitle>
+          <button
+            type="button"
+            onClick={handleVoiceForForm}
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center transition-all border",
+              isVoiceListening
+                ? "bg-destructive text-destructive-foreground animate-pulse border-destructive"
+                : "bg-primary/10 text-primary hover:bg-primary/20 border-primary/30"
+            )}
+            title={language === "hi" ? "बोलकर फॉर्म भरें" : "Fill form by voice"}
+          >
+            {isVoiceListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+          </button>
+        </div>
         <CardDescription className="text-base">
           {t('formSubtitle')}
         </CardDescription>
