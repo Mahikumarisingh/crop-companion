@@ -1551,6 +1551,12 @@ const CropCalendar = () => {
   return (
     <main className="min-h-screen bg-background">
       <Header />
+      <VoiceInput onResult={(text) => {
+        setSearchQuery(text);
+        setSelectedCrop(null);
+        setAiCrop(null);
+        setLastAISearch("");
+      }} />
 
       <div className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-6xl">

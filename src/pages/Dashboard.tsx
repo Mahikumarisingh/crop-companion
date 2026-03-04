@@ -181,6 +181,7 @@ const Dashboard = () => {
   return (
     <main className="min-h-screen bg-background">
       <Header />
+      <VoiceInput onResult={(text) => toast.info(`🎤 "${text}"`, { duration: 4000 })} />
       
       <div className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-6xl">
