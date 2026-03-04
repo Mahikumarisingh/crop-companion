@@ -1488,6 +1488,32 @@ const CropCalendar = () => {
   const [selectedCrop, setSelectedCrop] = useState<string | null>(null);
   const [aiCrop, setAiCrop] = useState<CropCalendarData | null>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [isVoiceListening, setIsVoiceListening] = useState(false);
+
+  const handleInlineVoice = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error(isHindi ? "आपका ब्राउज़र वॉइस सपोर्ट नहीं करता" : "Voice not supported");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    const langMap: Record<string, string> = { en: "en-IN", hi: "hi-IN", pa: "pa-IN", mr: "mr-IN", ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN" };
+    recognition.lang = langMap[language] || "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onresult = (event: any) => {
+      const text = event.results[0][0].transcript;
+      setSearchQuery(text);
+      setSelectedCrop(null);
+      setAiCrop(null);
+      setLastAISearch("");
+      setIsVoiceListening(false);
+    };
+    recognition.onerror = () => setIsVoiceListening(false);
+    recognition.onend = () => setIsVoiceListening(false);
+    recognition.start();
+    setIsVoiceListening(true);
+  };
 
   const filteredCrops = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -1613,7 +1639,19 @@ const CropCalendar = () => {
                   </Button>
                 )}
               </div>
-              
+              <button
+                type="button"
+                onClick={handleInlineVoice}
+                className={cn(
+                  "w-11 h-11 rounded-full flex items-center justify-center transition-all border flex-shrink-0",
+                  isVoiceListening
+                    ? "bg-destructive text-destructive-foreground animate-pulse border-destructive"
+                    : "bg-primary/10 text-primary hover:bg-primary/20 border-primary/30"
+                )}
+                title={isHindi ? "बोलकर खोजें" : "Search by voice"}
+              >
+                {isVoiceListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
             </div>
           </div>
 
