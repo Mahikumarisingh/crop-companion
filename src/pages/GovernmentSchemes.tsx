@@ -5,7 +5,9 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, Users } from "lucide-react";
+import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, Users, Search, Mic, MicOff } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useState, useRef, useCallback } from "react";
 
 interface Scheme {
   id: string;
@@ -189,10 +191,58 @@ const GovernmentSchemes = () => {
   const { language } = useLanguage();
   const isHindi = language === 'hi';
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isVoiceListening, setIsVoiceListening] = useState(false);
+  const voiceRef = useRef<any>(null);
+
+  const langMap: Record<string, string> = {
+    en: "en-IN", hi: "hi-IN", pa: "pa-IN", mr: "mr-IN",
+    ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN",
+  };
+
+  const handleInlineVoice = useCallback(() => {
+    if (isVoiceListening) {
+      voiceRef.current?.stop();
+      setIsVoiceListening(false);
+      return;
+    }
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      toast.error(isHindi ? "आपका ब्राउज़र वॉइस सपोर्ट नहीं करता" : "Browser doesn't support voice input");
+      return;
+    }
+    const recognition = new SR();
+    recognition.lang = langMap[language] || "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onresult = (e: any) => {
+      const text = e.results[0]?.[0]?.transcript || "";
+      if (text) {
+        setSearchQuery(text);
+        toast.info(`🎤 "${text}"`);
+      }
+    };
+    recognition.onerror = () => setIsVoiceListening(false);
+    recognition.onend = () => setIsVoiceListening(false);
+    voiceRef.current = recognition;
+    recognition.start();
+    setIsVoiceListening(true);
+    toast.info(isHindi ? "🎤 बोलिए..." : "🎤 Listening...");
+  }, [isVoiceListening, isHindi, language]);
+
+  const filteredSchemes = schemes.filter((scheme) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    const name = (isHindi ? scheme.nameHi : scheme.name).toLowerCase();
+    const desc = (isHindi ? scheme.descriptionHi : scheme.description).toLowerCase();
+    const cat = (isHindi ? categoryLabels[scheme.category].hi : categoryLabels[scheme.category].en).toLowerCase();
+    return name.includes(q) || desc.includes(q) || cat.includes(q);
+  });
+
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      <VoiceInput onResult={(text) => toast.info(`🎤 "${text}"`, { duration: 4000 })} />
+      <VoiceInput onResult={(text) => { setSearchQuery(text); toast.info(`🎤 "${text}"`, { duration: 4000 }); }} />
       
       <div className="pt-24 pb-12 px-4">
         <div className="container mx-auto max-w-6xl">
@@ -214,6 +264,32 @@ const GovernmentSchemes = () => {
             </p>
           </div>
 
+          {/* Search Bar with Voice */}
+          <div className="max-w-xl mx-auto mb-8">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={isHindi ? "योजना खोजें..." : "Search schemes..."}
+                  className="pl-10"
+                />
+              </div>
+              <button
+                onClick={handleInlineVoice}
+                className={`p-2.5 rounded-lg border transition-all ${
+                  isVoiceListening
+                    ? "bg-destructive text-destructive-foreground animate-pulse border-destructive"
+                    : "bg-card text-muted-foreground hover:text-primary hover:border-primary border-border"
+                }`}
+                aria-label="Voice search"
+              >
+                {isVoiceListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
           {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-2 mb-8">
             {Object.entries(categoryLabels).map(([key, label]) => (
@@ -228,7 +304,7 @@ const GovernmentSchemes = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {schemes.map((scheme) => {
+            {filteredSchemes.map((scheme) => {
               const Icon = scheme.icon;
               return (
                 <Card key={scheme.id} className="overflow-hidden hover:shadow-lg transition-shadow">
