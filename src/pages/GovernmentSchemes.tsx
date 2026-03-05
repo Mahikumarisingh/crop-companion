@@ -192,6 +192,7 @@ const GovernmentSchemes = () => {
   const isHindi = language === 'hi';
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isVoiceListening, setIsVoiceListening] = useState(false);
   const voiceRef = useRef<any>(null);
 
@@ -231,6 +232,7 @@ const GovernmentSchemes = () => {
   }, [isVoiceListening, isHindi, language]);
 
   const filteredSchemes = schemes.filter((scheme) => {
+    if (activeCategory && scheme.category !== activeCategory) return false;
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     const name = (isHindi ? scheme.nameHi : scheme.name).toLowerCase();
@@ -292,11 +294,23 @@ const GovernmentSchemes = () => {
 
           {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <Badge
+              variant="outline"
+              onClick={() => setActiveCategory(null)}
+              className={`cursor-pointer transition-all ${!activeCategory ? "bg-primary text-primary-foreground border-primary" : "hover:opacity-80"}`}
+            >
+              {isHindi ? "सभी" : "All"}
+            </Badge>
             {Object.entries(categoryLabels).map(([key, label]) => (
               <Badge
                 key={key}
                 variant="outline"
-                className={`${categoryColors[key as keyof typeof categoryColors]} cursor-pointer hover:opacity-80`}
+                onClick={() => setActiveCategory(activeCategory === key ? null : key)}
+                className={`cursor-pointer transition-all ${
+                  activeCategory === key
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : `${categoryColors[key as keyof typeof categoryColors]} hover:opacity-80`
+                }`}
               >
                 {isHindi ? label.hi : label.en}
               </Badge>
