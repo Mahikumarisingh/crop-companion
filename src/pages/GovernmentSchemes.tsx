@@ -5,7 +5,9 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, Users } from "lucide-react";
+import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, Users, Search, Mic, MicOff } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useState, useRef, useCallback } from "react";
 
 interface Scheme {
   id: string;
