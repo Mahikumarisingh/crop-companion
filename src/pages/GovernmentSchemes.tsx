@@ -275,7 +275,7 @@ const GovernmentSchemes = () => {
     toast.info(isHindi ? "🎤 बोलिए..." : "🎤 Listening...");
   }, [isVoiceListening, isHindi, language]);
 
-  const filteredSchemes = schemes.filter((scheme) => {
+  const filteredSchemes = liveSchemes.filter((scheme) => {
     if (activeCategory && scheme.category !== activeCategory) return false;
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
