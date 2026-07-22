@@ -204,6 +204,7 @@ const GovernmentSchemes = () => {
   const [liveSchemes, setLiveSchemes] = useState<Scheme[]>(schemes);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedState, setSelectedState] = useState<string>("central");
   const voiceRef = useRef<any>(null);
 
   const langMap: Record<string, string> = {
@@ -211,11 +212,15 @@ const GovernmentSchemes = () => {
     ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN",
   };
 
-  const loadSchemes = useCallback(async () => {
+  const rowIdFor = (state: string) =>
+    state === "central" ? "latest" : `state:${state.toLowerCase()}`;
+
+  const loadSchemes = useCallback(async (state: string) => {
+    const rowId = rowIdFor(state);
     const { data, error } = await supabase
       .from("government_schemes")
       .select("data, updated_at")
-      .eq("id", "latest")
+      .eq("id", rowId)
       .maybeSingle();
     if (!error && data?.data) {
       const raw = (data.data as any).schemes ?? [];
@@ -226,25 +231,43 @@ const GovernmentSchemes = () => {
       if (mapped.length) {
         setLiveSchemes(mapped);
         setLastUpdated(data.updated_at as string);
+        return true;
       }
     }
+    return false;
   }, []);
 
-  useEffect(() => { loadSchemes(); }, [loadSchemes]);
-
-  const handleRefresh = useCallback(async () => {
+  const refreshFromAI = useCallback(async (state: string) => {
     setIsRefreshing(true);
     try {
-      const { error } = await supabase.functions.invoke("refresh-government-schemes");
+      const body = state === "central" ? {} : { state };
+      const { error } = await supabase.functions.invoke("refresh-government-schemes", { body });
       if (error) throw error;
-      await loadSchemes();
+      await loadSchemes(state);
       toast.success(isHindi ? "योजनाएं अपडेट हो गईं" : "Schemes updated");
-    } catch (e) {
+    } catch {
       toast.error(isHindi ? "अपडेट असफल" : "Update failed");
     } finally {
       setIsRefreshing(false);
     }
   }, [loadSchemes, isHindi]);
+
+  useEffect(() => {
+    (async () => {
+      const found = await loadSchemes(selectedState);
+      if (!found && selectedState !== "central") {
+        // Auto-fetch state schemes on first selection
+        await refreshFromAI(selectedState);
+      } else if (!found) {
+        setLiveSchemes(schemes);
+        setLastUpdated(null);
+      }
+    })();
+  }, [selectedState, loadSchemes, refreshFromAI]);
+
+  const handleRefresh = () => refreshFromAI(selectedState);
+
+
 
 
   const handleInlineVoice = useCallback(() => {
