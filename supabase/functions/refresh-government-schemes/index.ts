@@ -6,7 +6,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const SYSTEM_PROMPT = `You are an expert on Indian government schemes for farmers. Return the CURRENT and LATEST list of active central government schemes helping Indian farmers (agriculture, insurance, credit, subsidy, irrigation, marketing, welfare). Include recently launched or updated schemes as of today. Return 8-12 schemes.
+const buildSystemPrompt = (state: string | null) => {
+  const scope = state
+    ? `Return the CURRENT and LATEST list of active government schemes for farmers in the Indian state of "${state}". Prioritize STATE government schemes (run by the state's agriculture / horticulture / cooperation departments) that are specific to ${state}. Skip central schemes unless they have a ${state}-specific top-up or component.`
+    : `Return the CURRENT and LATEST list of active CENTRAL government schemes helping Indian farmers (agriculture, insurance, credit, subsidy, irrigation, marketing, welfare). Include recently launched or updated schemes as of today.`;
+
+  return `You are an expert on Indian government schemes for farmers. ${scope} Return 8-12 schemes.
 
 Respond ENTIRELY in valid JSON only, no markdown, no code fences. Structure:
 {
@@ -29,6 +34,7 @@ Respond ENTIRELY in valid JSON only, no markdown, no code fences. Structure:
     }
   ]
 }`;
+};
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -41,6 +47,17 @@ serve(async (req) => {
       throw new Error("Missing env config");
     }
 
+    let state: string | null = null;
+    if (req.method === "POST") {
+      try {
+        const body = await req.json();
+        if (body?.state && typeof body.state === "string") {
+          state = body.state.trim();
+        }
+      } catch { /* no body */ }
+    }
+    const rowId = state ? `state:${state.toLowerCase()}` : "latest";
+
     const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -50,8 +67,15 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: `Today is ${new Date().toISOString().slice(0,10)}. Give me the latest active Indian government schemes for farmers in the specified JSON format.` },
+          { role: "system", content: buildSystemPrompt(state) },
+          {
+            role: "user",
+            content: `Today is ${new Date().toISOString().slice(0, 10)}. ${
+              state
+                ? `Give the latest active government schemes for farmers in ${state} in the specified JSON format.`
+                : `Give the latest active central government schemes for Indian farmers in the specified JSON format.`
+            }`,
+          },
         ],
         response_format: { type: "json_object" },
       }),
@@ -73,11 +97,11 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
     const { error } = await supabase
       .from("government_schemes")
-      .upsert({ id: "latest", data: { schemes }, updated_at: new Date().toISOString() });
+      .upsert({ id: rowId, data: { schemes, state }, updated_at: new Date().toISOString() });
     if (error) throw error;
 
     return new Response(
-      JSON.stringify({ success: true, count: schemes.length, updated_at: new Date().toISOString() }),
+      JSON.stringify({ success: true, id: rowId, state, count: schemes.length, updated_at: new Date().toISOString() }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (e) {
