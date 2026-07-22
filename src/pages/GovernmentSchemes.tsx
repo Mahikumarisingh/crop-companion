@@ -9,6 +9,8 @@ import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, 
 import { Input } from "@/components/ui/input";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { indiaLocationData } from "@/data/indiaLocations";
 
 const iconMap: Record<string, typeof Landmark> = {
   IndianRupee, Shield, Tractor, Droplets, Wheat, Users, Landmark,
@@ -202,6 +204,7 @@ const GovernmentSchemes = () => {
   const [liveSchemes, setLiveSchemes] = useState<Scheme[]>(schemes);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedState, setSelectedState] = useState<string>("central");
   const voiceRef = useRef<any>(null);
 
   const langMap: Record<string, string> = {
@@ -209,11 +212,15 @@ const GovernmentSchemes = () => {
     ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN",
   };
 
-  const loadSchemes = useCallback(async () => {
+  const rowIdFor = (state: string) =>
+    state === "central" ? "latest" : `state:${state.toLowerCase()}`;
+
+  const loadSchemes = useCallback(async (state: string) => {
+    const rowId = rowIdFor(state);
     const { data, error } = await supabase
       .from("government_schemes")
       .select("data, updated_at")
-      .eq("id", "latest")
+      .eq("id", rowId)
       .maybeSingle();
     if (!error && data?.data) {
       const raw = (data.data as any).schemes ?? [];
@@ -224,25 +231,43 @@ const GovernmentSchemes = () => {
       if (mapped.length) {
         setLiveSchemes(mapped);
         setLastUpdated(data.updated_at as string);
+        return true;
       }
     }
+    return false;
   }, []);
 
-  useEffect(() => { loadSchemes(); }, [loadSchemes]);
-
-  const handleRefresh = useCallback(async () => {
+  const refreshFromAI = useCallback(async (state: string) => {
     setIsRefreshing(true);
     try {
-      const { error } = await supabase.functions.invoke("refresh-government-schemes");
+      const body = state === "central" ? {} : { state };
+      const { error } = await supabase.functions.invoke("refresh-government-schemes", { body });
       if (error) throw error;
-      await loadSchemes();
+      await loadSchemes(state);
       toast.success(isHindi ? "योजनाएं अपडेट हो गईं" : "Schemes updated");
-    } catch (e) {
+    } catch {
       toast.error(isHindi ? "अपडेट असफल" : "Update failed");
     } finally {
       setIsRefreshing(false);
     }
   }, [loadSchemes, isHindi]);
+
+  useEffect(() => {
+    (async () => {
+      const found = await loadSchemes(selectedState);
+      if (!found && selectedState !== "central") {
+        // Auto-fetch state schemes on first selection
+        await refreshFromAI(selectedState);
+      } else if (!found) {
+        setLiveSchemes(schemes);
+        setLastUpdated(null);
+      }
+    })();
+  }, [selectedState, loadSchemes, refreshFromAI]);
+
+  const handleRefresh = () => refreshFromAI(selectedState);
+
+
 
 
   const handleInlineVoice = useCallback(() => {
@@ -327,6 +352,28 @@ const GovernmentSchemes = () => {
               </Button>
             </div>
           </div>
+
+          {/* State selector */}
+          <div className="max-w-xl mx-auto mb-4 flex flex-col sm:flex-row items-center gap-2">
+            <label className="text-sm font-medium whitespace-nowrap">
+              {isHindi ? "योजनाएं दिखाएं:" : "Show schemes for:"}
+            </label>
+            <Select value={selectedState} onValueChange={setSelectedState} disabled={isRefreshing}>
+              <SelectTrigger className="flex-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                <SelectItem value="central">
+                  {isHindi ? "केंद्र सरकार (सभी राज्य)" : "Central Government (All India)"}
+                </SelectItem>
+                {indiaLocationData.states.map((s) => (
+                  <SelectItem key={s.name} value={s.name}>{s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+
 
           {/* Search Bar with Voice */}
           <div className="max-w-xl mx-auto mb-8">
