@@ -353,6 +353,28 @@ const GovernmentSchemes = () => {
             </div>
           </div>
 
+          {/* State selector */}
+          <div className="max-w-xl mx-auto mb-4 flex flex-col sm:flex-row items-center gap-2">
+            <label className="text-sm font-medium whitespace-nowrap">
+              {isHindi ? "योजनाएं दिखाएं:" : "Show schemes for:"}
+            </label>
+            <Select value={selectedState} onValueChange={setSelectedState} disabled={isRefreshing}>
+              <SelectTrigger className="flex-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                <SelectItem value="central">
+                  {isHindi ? "केंद्र सरकार (सभी राज्य)" : "Central Government (All India)"}
+                </SelectItem>
+                {indiaLocationData.states.map((s) => (
+                  <SelectItem key={s.name} value={s.name}>{s.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+
+
           {/* Search Bar with Voice */}
           <div className="max-w-xl mx-auto mb-8">
             <div className="flex items-center gap-2">
