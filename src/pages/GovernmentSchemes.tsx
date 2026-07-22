@@ -9,6 +9,8 @@ import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, 
 import { Input } from "@/components/ui/input";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { indiaLocationData } from "@/data/indiaLocations";
 
 const iconMap: Record<string, typeof Landmark> = {
   IndianRupee, Shield, Tractor, Droplets, Wheat, Users, Landmark,
