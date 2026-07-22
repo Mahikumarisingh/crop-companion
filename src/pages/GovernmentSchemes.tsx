@@ -308,6 +308,24 @@ const GovernmentSchemes = () => {
                 : "Complete information about PM Kisan, Crop Insurance, Kisan Credit Card and other government schemes"
               }
             </p>
+            <div className="mt-4 flex items-center justify-center gap-3 text-xs text-muted-foreground">
+              {lastUpdated && (
+                <span>
+                  {isHindi ? "अंतिम अपडेट: " : "Last updated: "}
+                  {new Date(lastUpdated).toLocaleString(isHindi ? "hi-IN" : "en-IN")}
+                </span>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="h-7 gap-1.5"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+                {isHindi ? "अभी अपडेट करें" : "Refresh now"}
+              </Button>
+            </div>
           </div>
 
           {/* Search Bar with Voice */}
