@@ -5,9 +5,14 @@ import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, Users, Search, Mic, MicOff } from "lucide-react";
+import { Landmark, ExternalLink, IndianRupee, Shield, Tractor, Droplets, Wheat, Users, Search, Mic, MicOff, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+const iconMap: Record<string, typeof Landmark> = {
+  IndianRupee, Shield, Tractor, Droplets, Wheat, Users, Landmark,
+};
 
 interface Scheme {
   id: string;
@@ -194,12 +199,51 @@ const GovernmentSchemes = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isVoiceListening, setIsVoiceListening] = useState(false);
+  const [liveSchemes, setLiveSchemes] = useState<Scheme[]>(schemes);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const voiceRef = useRef<any>(null);
 
   const langMap: Record<string, string> = {
     en: "en-IN", hi: "hi-IN", pa: "pa-IN", mr: "mr-IN",
     ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN",
   };
+
+  const loadSchemes = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("government_schemes")
+      .select("data, updated_at")
+      .eq("id", "latest")
+      .maybeSingle();
+    if (!error && data?.data) {
+      const raw = (data.data as any).schemes ?? [];
+      const mapped: Scheme[] = raw.map((s: any) => ({
+        ...s,
+        icon: iconMap[s.iconName] ?? Landmark,
+      }));
+      if (mapped.length) {
+        setLiveSchemes(mapped);
+        setLastUpdated(data.updated_at as string);
+      }
+    }
+  }, []);
+
+  useEffect(() => { loadSchemes(); }, [loadSchemes]);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      const { error } = await supabase.functions.invoke("refresh-government-schemes");
+      if (error) throw error;
+      await loadSchemes();
+      toast.success(isHindi ? "योजनाएं अपडेट हो गईं" : "Schemes updated");
+    } catch (e) {
+      toast.error(isHindi ? "अपडेट असफल" : "Update failed");
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [loadSchemes, isHindi]);
+
 
   const handleInlineVoice = useCallback(() => {
     if (isVoiceListening) {
@@ -231,7 +275,7 @@ const GovernmentSchemes = () => {
     toast.info(isHindi ? "🎤 बोलिए..." : "🎤 Listening...");
   }, [isVoiceListening, isHindi, language]);
 
-  const filteredSchemes = schemes.filter((scheme) => {
+  const filteredSchemes = liveSchemes.filter((scheme) => {
     if (activeCategory && scheme.category !== activeCategory) return false;
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
@@ -264,6 +308,24 @@ const GovernmentSchemes = () => {
                 : "Complete information about PM Kisan, Crop Insurance, Kisan Credit Card and other government schemes"
               }
             </p>
+            <div className="mt-4 flex items-center justify-center gap-3 text-xs text-muted-foreground">
+              {lastUpdated && (
+                <span>
+                  {isHindi ? "अंतिम अपडेट: " : "Last updated: "}
+                  {new Date(lastUpdated).toLocaleString(isHindi ? "hi-IN" : "en-IN")}
+                </span>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="h-7 gap-1.5"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+                {isHindi ? "अभी अपडेट करें" : "Refresh now"}
+              </Button>
+            </div>
           </div>
 
           {/* Search Bar with Voice */}
