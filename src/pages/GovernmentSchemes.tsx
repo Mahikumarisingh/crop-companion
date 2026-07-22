@@ -199,12 +199,51 @@ const GovernmentSchemes = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isVoiceListening, setIsVoiceListening] = useState(false);
+  const [liveSchemes, setLiveSchemes] = useState<Scheme[]>(schemes);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const voiceRef = useRef<any>(null);
 
   const langMap: Record<string, string> = {
     en: "en-IN", hi: "hi-IN", pa: "pa-IN", mr: "mr-IN",
     ta: "ta-IN", te: "te-IN", bn: "bn-IN", gu: "gu-IN",
   };
+
+  const loadSchemes = useCallback(async () => {
+    const { data, error } = await supabase
+      .from("government_schemes")
+      .select("data, updated_at")
+      .eq("id", "latest")
+      .maybeSingle();
+    if (!error && data?.data) {
+      const raw = (data.data as any).schemes ?? [];
+      const mapped: Scheme[] = raw.map((s: any) => ({
+        ...s,
+        icon: iconMap[s.iconName] ?? Landmark,
+      }));
+      if (mapped.length) {
+        setLiveSchemes(mapped);
+        setLastUpdated(data.updated_at as string);
+      }
+    }
+  }, []);
+
+  useEffect(() => { loadSchemes(); }, [loadSchemes]);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      const { error } = await supabase.functions.invoke("refresh-government-schemes");
+      if (error) throw error;
+      await loadSchemes();
+      toast.success(isHindi ? "योजनाएं अपडेट हो गईं" : "Schemes updated");
+    } catch (e) {
+      toast.error(isHindi ? "अपडेट असफल" : "Update failed");
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [loadSchemes, isHindi]);
+
 
   const handleInlineVoice = useCallback(() => {
     if (isVoiceListening) {
