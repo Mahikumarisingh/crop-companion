@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CropForm, { FormData } from "@/components/CropForm";
@@ -17,6 +17,7 @@ const Index = () => {
   const [recommendations, setRecommendations] = useState<CropRecommendation[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -29,6 +30,12 @@ const Index = () => {
     setRecommendations(results);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (recommendations && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [recommendations]);
 
   const handleReset = () => {
     setRecommendations(null);
@@ -62,7 +69,9 @@ const Index = () => {
 
       {/* Results Section */}
       {recommendations && (
-        <RecommendationResults recommendations={recommendations} onReset={handleReset} />
+        <div ref={resultsRef}>
+          <RecommendationResults recommendations={recommendations} onReset={handleReset} />
+        </div>
       )}
 
       {/* Farming Tools Section */}
