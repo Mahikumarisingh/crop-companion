@@ -127,7 +127,17 @@ const Index = () => {
 
       {/* Results Section */}
       {recommendations && (
-        <div id="results" ref={resultsRef} tabIndex={-1} className="scroll-mt-20 outline-none">
+        <div
+          id="results"
+          ref={resultsRef}
+          tabIndex={-1}
+          className={
+            "scroll-mt-20 outline-none transition-all duration-500 rounded-lg " +
+            (highlightResults
+              ? "ring-4 ring-primary/60 ring-offset-2 ring-offset-background shadow-[0_0_40px_hsl(var(--primary)/0.35)]"
+              : "ring-0")
+          }
+        >
           <RecommendationResults recommendations={recommendations} onReset={handleReset} />
         </div>
       )}
