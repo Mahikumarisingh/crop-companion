@@ -12,15 +12,39 @@ import { Sprout } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { toast } from "sonner";
 
+const RESULTS_STORAGE_KEY = "cropwise:last-recommendations";
+
 const Index = () => {
   const { t } = useLanguage();
-  const [recommendations, setRecommendations] = useState<CropRecommendation[] | null>(null);
+  const [recommendations, setRecommendations] = useState<CropRecommendation[] | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const raw = sessionStorage.getItem(RESULTS_STORAGE_KEY);
+      return raw ? (JSON.parse(raw) as CropRecommendation[]) : null;
+    } catch {
+      return null;
+    }
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [highlightResults, setHighlightResults] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const highlightTimerRef = useRef<number | null>(null);
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const triggerHighlight = () => {
+    setHighlightResults(true);
+    if (highlightTimerRef.current) window.clearTimeout(highlightTimerRef.current);
+    highlightTimerRef.current = window.setTimeout(() => setHighlightResults(false), 2500);
+  };
+
+  const scrollToResults = () => {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    resultsRef.current?.focus({ preventScroll: true });
+    triggerHighlight();
   };
 
   const handleFormSubmit = async (formData: FormData) => {
@@ -29,15 +53,12 @@ const Index = () => {
     const results = generateRecommendations(formData);
     setRecommendations(results);
     setIsLoading(false);
-    // Persist a stable anchor so back/forward and shares land on results
+    try {
+      sessionStorage.setItem(RESULTS_STORAGE_KEY, JSON.stringify(results));
+    } catch {}
     if (typeof window !== "undefined") {
       window.history.replaceState(null, "", "#results");
     }
-  };
-
-  const scrollToResults = () => {
-    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    resultsRef.current?.focus({ preventScroll: true });
   };
 
   useEffect(() => {
@@ -46,7 +67,7 @@ const Index = () => {
     }
   }, [recommendations]);
 
-  // Re-scroll on hash changes (nav links, back/forward) while results exist
+  // Handle hash-based navigation (initial load, back/forward, nav links)
   useEffect(() => {
     const onHashChange = () => {
       if (window.location.hash === "#results" && resultsRef.current) {
@@ -56,20 +77,27 @@ const Index = () => {
       }
     };
     window.addEventListener("hashchange", onHashChange);
-    // Handle initial load with #results in URL
     if (window.location.hash === "#results" && recommendations) {
-      requestAnimationFrame(scrollToResults);
+      // Delay one frame so the results DOM is mounted after hydration
+      requestAnimationFrame(() => requestAnimationFrame(scrollToResults));
     }
-    return () => window.removeEventListener("hashchange", onHashChange);
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
+      if (highlightTimerRef.current) window.clearTimeout(highlightTimerRef.current);
+    };
   }, [recommendations]);
 
   const handleReset = () => {
     setRecommendations(null);
+    try {
+      sessionStorage.removeItem(RESULTS_STORAGE_KEY);
+    } catch {}
     if (typeof window !== "undefined" && window.location.hash) {
       window.history.replaceState(null, "", window.location.pathname);
     }
     scrollToForm();
   };
+
 
 
   const handleVoiceResult = (text: string) => {
