@@ -33,7 +33,10 @@ const Index = () => {
 
   useEffect(() => {
     if (recommendations && resultsRef.current) {
-      resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      requestAnimationFrame(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        resultsRef.current?.focus({ preventScroll: true });
+      });
     }
   }, [recommendations]);
 
