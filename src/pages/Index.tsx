@@ -99,7 +99,7 @@ const Index = () => {
 
       {/* Results Section */}
       {recommendations && (
-        <div ref={resultsRef} tabIndex={-1} className="scroll-mt-20 outline-none">
+        <div id="results" ref={resultsRef} tabIndex={-1} className="scroll-mt-20 outline-none">
           <RecommendationResults recommendations={recommendations} onReset={handleReset} />
         </div>
       )}
