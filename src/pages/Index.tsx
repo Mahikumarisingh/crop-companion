@@ -29,21 +29,48 @@ const Index = () => {
     const results = generateRecommendations(formData);
     setRecommendations(results);
     setIsLoading(false);
+    // Persist a stable anchor so back/forward and shares land on results
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", "#results");
+    }
+  };
+
+  const scrollToResults = () => {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    resultsRef.current?.focus({ preventScroll: true });
   };
 
   useEffect(() => {
     if (recommendations && resultsRef.current) {
-      requestAnimationFrame(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        resultsRef.current?.focus({ preventScroll: true });
-      });
+      requestAnimationFrame(scrollToResults);
     }
+  }, [recommendations]);
+
+  // Re-scroll on hash changes (nav links, back/forward) while results exist
+  useEffect(() => {
+    const onHashChange = () => {
+      if (window.location.hash === "#results" && resultsRef.current) {
+        requestAnimationFrame(scrollToResults);
+      } else if (window.location.hash === "#form") {
+        formRef.current?.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+    window.addEventListener("hashchange", onHashChange);
+    // Handle initial load with #results in URL
+    if (window.location.hash === "#results" && recommendations) {
+      requestAnimationFrame(scrollToResults);
+    }
+    return () => window.removeEventListener("hashchange", onHashChange);
   }, [recommendations]);
 
   const handleReset = () => {
     setRecommendations(null);
+    if (typeof window !== "undefined" && window.location.hash) {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
     scrollToForm();
   };
+
 
   const handleVoiceResult = (text: string) => {
     toast.info(`🎤 "${text}"`, { duration: 4000 });
