@@ -33,7 +33,10 @@ const Index = () => {
 
   useEffect(() => {
     if (recommendations && resultsRef.current) {
-      resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      requestAnimationFrame(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        resultsRef.current?.focus({ preventScroll: true });
+      });
     }
   }, [recommendations]);
 
@@ -69,7 +72,7 @@ const Index = () => {
 
       {/* Results Section */}
       {recommendations && (
-        <div ref={resultsRef}>
+        <div ref={resultsRef} tabIndex={-1} className="scroll-mt-20 outline-none">
           <RecommendationResults recommendations={recommendations} onReset={handleReset} />
         </div>
       )}
