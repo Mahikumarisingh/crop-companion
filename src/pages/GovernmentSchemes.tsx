@@ -428,7 +428,7 @@ const GovernmentSchemes = () => {
             ))}
           </div>
 
-          {isRefreshing || (liveSchemes.length === 0) ? (
+          {isRefreshing ? (
             <div className="text-center py-16">
               <RefreshCw className="w-10 h-10 mx-auto mb-4 text-primary animate-spin" />
               <p className="text-lg font-medium mb-1">
@@ -440,9 +440,34 @@ const GovernmentSchemes = () => {
                   : `Fetching the latest schemes for ${selectedState === "central" ? "Central Govt" : selectedState} from AI (10-15 seconds)`}
               </p>
             </div>
+          ) : liveSchemes.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+                <Landmark className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-lg font-medium mb-2">
+                {isHindi
+                  ? `${selectedState === "central" ? "केंद्र सरकार" : selectedState} के लिए कोई योजना नहीं मिली`
+                  : `No schemes found for ${selectedState === "central" ? "Central Government" : selectedState}`}
+              </p>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
+                {isHindi
+                  ? "कृपया बाद में फिर से प्रयास करें या केंद्रीय योजनाएं देखने के लिए राज्य बदलें।"
+                  : "Please try again later or change the state to view central government schemes."}
+              </p>
+              <Button
+                variant="outline"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="gap-2"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
+                {isHindi ? "फिर से कोशिश करें" : "Try again"}
+              </Button>
+            </div>
           ) : filteredSchemes.length === 0 ? (
             <div className="text-center py-16 text-muted-foreground">
-              {isHindi ? "कोई योजना नहीं मिली" : "No schemes found"}
+              {isHindi ? "आपकी खोज से कोई योजना नहीं मिली" : "No schemes found matching your search"}
             </div>
           ) : (
           <div className="grid md:grid-cols-2 gap-6">
