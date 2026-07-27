@@ -254,13 +254,15 @@ const GovernmentSchemes = () => {
 
   useEffect(() => {
     (async () => {
+      // Clear stale schemes immediately so user sees loading state, not previous state's data
+      setLiveSchemes([]);
+      setLastUpdated(null);
       const found = await loadSchemes(selectedState);
       if (!found && selectedState !== "central") {
         // Auto-fetch state schemes on first selection
         await refreshFromAI(selectedState);
       } else if (!found) {
         setLiveSchemes(schemes);
-        setLastUpdated(null);
       }
     })();
   }, [selectedState, loadSchemes, refreshFromAI]);
@@ -426,6 +428,23 @@ const GovernmentSchemes = () => {
             ))}
           </div>
 
+          {isRefreshing || (liveSchemes.length === 0) ? (
+            <div className="text-center py-16">
+              <RefreshCw className="w-10 h-10 mx-auto mb-4 text-primary animate-spin" />
+              <p className="text-lg font-medium mb-1">
+                {isHindi ? "योजनाएं लोड हो रही हैं..." : "Loading schemes..."}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {isHindi
+                  ? `${selectedState === "central" ? "केंद्र" : selectedState} के लिए नवीनतम योजनाएं AI से प्राप्त की जा रही हैं (10-15 सेकंड)`
+                  : `Fetching the latest schemes for ${selectedState === "central" ? "Central Govt" : selectedState} from AI (10-15 seconds)`}
+              </p>
+            </div>
+          ) : filteredSchemes.length === 0 ? (
+            <div className="text-center py-16 text-muted-foreground">
+              {isHindi ? "कोई योजना नहीं मिली" : "No schemes found"}
+            </div>
+          ) : (
           <div className="grid md:grid-cols-2 gap-6">
             {filteredSchemes.map((scheme) => {
               const Icon = scheme.icon;
@@ -490,6 +509,7 @@ const GovernmentSchemes = () => {
               );
             })}
           </div>
+          )}
 
           {/* Helpline */}
           <Card className="mt-8 bg-primary/5 border-primary/20">
