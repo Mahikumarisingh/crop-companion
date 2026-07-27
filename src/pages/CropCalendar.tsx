@@ -1527,6 +1527,23 @@ const CropCalendar = () => {
     );
   }, [searchQuery]);
 
+  const NON_CROP_WORDS = useMemo(() => new Set([
+    "january","february","march","april","may","june","july","august","september","october","november","december",
+    "jan","feb","mar","apr","jun","jul","aug","sep","sept","oct","nov","dec",
+    "जनवरी","फरवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर",
+    "kharif","rabi","zaid","खरीफ","रबी","जायद",
+    "monday","tuesday","wednesday","thursday","friday","saturday","sunday",
+    "summer","winter","spring","monsoon","autumn",
+  ]), []);
+
+  const isLikelyCrop = useCallback((q: string) => {
+    const s = q.trim().toLowerCase();
+    if (s.length < 3) return false;
+    if (NON_CROP_WORDS.has(s)) return false;
+    if (/^\d+$/.test(s)) return false;
+    return true;
+  }, [NON_CROP_WORDS]);
+
   const searchAICrop = useCallback(async (cropName: string) => {
     setIsLoadingAI(true);
     setAiCrop(null);
@@ -1541,11 +1558,10 @@ const CropCalendar = () => {
       }
     } catch (err) {
       console.error("AI crop calendar error:", err);
-      toast.error(isHindi ? "फसल की जानकारी नहीं मिल सकी" : "Could not fetch crop information");
     } finally {
       setIsLoadingAI(false);
     }
-  }, [language, isHindi]);
+  }, [language]);
 
   // Auto-search with AI when no local results found
   const [lastAISearch, setLastAISearch] = useState("");
@@ -1555,20 +1571,21 @@ const CropCalendar = () => {
     return (query: string) => {
       clearTimeout(timer);
       timer = setTimeout(() => {
-        if (query.trim().length >= 2) {
+        if (isLikelyCrop(query)) {
           setLastAISearch(query);
           searchAICrop(query);
         }
       }, 800);
     };
-  }, [searchAICrop]);
+  }, [searchAICrop, isLikelyCrop]);
 
   // Trigger AI search when local results are empty
   useMemo(() => {
-    if (searchQuery.trim().length >= 2 && filteredCrops.length === 0 && lastAISearch !== searchQuery && !isLoadingAI) {
+    if (isLikelyCrop(searchQuery) && filteredCrops.length === 0 && lastAISearch !== searchQuery && !isLoadingAI) {
       debouncedSearch(searchQuery);
     }
-  }, [searchQuery, filteredCrops.length, lastAISearch, isLoadingAI, debouncedSearch]);
+  }, [searchQuery, filteredCrops.length, lastAISearch, isLoadingAI, debouncedSearch, isLikelyCrop]);
+
   const currentCrop = selectedCrop === "__ai__"
     ? aiCrop
     : selectedCrop
