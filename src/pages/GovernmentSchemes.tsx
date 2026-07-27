@@ -254,13 +254,15 @@ const GovernmentSchemes = () => {
 
   useEffect(() => {
     (async () => {
+      // Clear stale schemes immediately so user sees loading state, not previous state's data
+      setLiveSchemes([]);
+      setLastUpdated(null);
       const found = await loadSchemes(selectedState);
       if (!found && selectedState !== "central") {
         // Auto-fetch state schemes on first selection
         await refreshFromAI(selectedState);
       } else if (!found) {
         setLiveSchemes(schemes);
-        setLastUpdated(null);
       }
     })();
   }, [selectedState, loadSchemes, refreshFromAI]);
